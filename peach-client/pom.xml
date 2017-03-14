@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>peach-parent</artifactId>
+        <groupId>com.proteus.peach</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>peach-client</artifactId>
+    <name>Peach project - Client</name>
+    <url>https://www.proteus-bigdata.com/</url>
+
+    <developers>
+        <developer>
+            <id>aagea</id>
+            <name>Alvaro Agea</name>
+            <email>alvaro@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>dhiguero</id>
+            <name>Daniel Higuero</name>
+            <email>daniel@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>jtirado</id>
+            <name>Juan Manuel Tirado</name>
+            <email>juan@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <!-- Make scala style possible... -->
+        <base.path>${basedir}/..</base.path>
+    </properties>
+</project>
