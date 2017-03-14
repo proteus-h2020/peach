@@ -28,4 +28,5 @@ consortium of 6 partners including Novelti (startup focused on streaming analyti
 of Apache Flink), ArcelorMitall (worlds’s leading steel company), Treelogic (creators of Lambdoop) and 
 Trilateral (policy and regulatory advice on new technologies)
 
-Official website: [PROTEUS H2020](http://www.proteus-bigdata.com/)
+Official website: [PROTEUS H2020](http://www.proteus-bigdata.com/) 
+Official Twitter account: [@proteus_bigdata](https://twitter.com/proteus_bigdata)
