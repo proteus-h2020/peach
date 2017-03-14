@@ -11,9 +11,12 @@ nectarines are characterized by the absence of fruit-skin trichomes (fuzz-less f
 nectarines are produced due to a recessive allele, whereas peaches are produced from a dominant allele for fuzzy skin. 
 The People's Republic of China is the world's largest producer of peaches. – 
 [Wikipedia](https://en.wikipedia.org/wiki/Peach)
-Master 
+
+####Master branch
+ 
 [![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=master)](https://travis-ci.org/proteus-h2020/peach)
-Develop 
+####Develop branch
+ 
 [![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=develop)](https://travis-ci.org/proteus-h2020/peach)
 
 ## What does this module do
