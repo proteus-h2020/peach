@@ -1,16 +1,12 @@
 <scalastyle commentFilter="enabled">
-    <name>Scalastyle Novelti configuration</name>
-    <!--
-        Novelti Scalastyle code conventions
-        Version: 0.1.1
-        Novelti (C)
-    -->
+    <name>Scalastyle Proteus configuration</name>
+
     <check enabled="true" class="org.scalastyle.file.FileLengthChecker" level="warning">
         <parameters>
             <parameter name="maxFileLength">1000</parameter>
         </parameters>
     </check>
-    <check enabled="true" class="org.scalastyle.file.FileLineLengthChecker" level="warning" />
+    <check enabled="true" class="org.scalastyle.file.FileLineLengthChecker" level="warning"/>
     <check enabled="true" class="org.scalastyle.file.FileTabChecker" level="warning"/>
     <check enabled="true" class="org.scalastyle.file.IndentationChecker" level="warning">
         <parameters>
@@ -114,8 +110,8 @@
            level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.RedundantIfChecker" level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.ReturnChecker" level="warning"/>
-    <!-- Commented as it gives a ton of false positives -->
-    <!--check enabled="true" class="org.scalastyle.scalariform.ScalaDocChecker" level="warning"/-->
+
+    <check enabled="true" class="org.scalastyle.scalariform.ScalaDocChecker" level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.SimplifyBooleanExpressionChecker"
            level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.SpaceAfterCommentStartChecker"
@@ -124,8 +120,7 @@
            level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.BeforePlusChecker" level="warning"/>
     <check enabled="true" class="org.scalastyle.scalariform.StructuralTypeChecker" level="warning"/>
-    <!--Validation in code review -->
-    <!--check enabled="true" class="org.scalastyle.scalariform.UnderscoreImportChecker"
-           level="warning"/-->
-    <check enabled="true" class="org.scalastyle.scalariform.UppercaseLChecker" level="warning" />
+
+    <check enabled="true" class="org.scalastyle.scalariform.UnderscoreImportChecker" level="warning"/>
+    <check enabled="true" class="org.scalastyle.scalariform.UppercaseLChecker" level="warning"/>
 </scalastyle>

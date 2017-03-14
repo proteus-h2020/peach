@@ -38,6 +38,8 @@
 
     <properties>
         <scala.version>2.11.6</scala.version>
+        <junit.version>4.12</junit.version>
+
         <base.path>${basedir}</base.path>
         <scalastyle.fail>true</scalastyle.fail>
     </properties>
@@ -47,6 +49,12 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
     <build>
