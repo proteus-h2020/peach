@@ -39,5 +39,17 @@
         <base.path>${basedir}/..</base.path>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>${parent.groupId}</groupId>
+            <artifactId>peach-common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-cluster_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

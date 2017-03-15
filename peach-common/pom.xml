@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>peach-client</artifactId>
-    <name>Peach project - Client</name>
+    <artifactId>peach-common</artifactId>
+    <name>Peach project - Common</name>
     <url>https://www.proteus-bigdata.com/</url>
 
     <developers>
@@ -39,11 +39,4 @@
         <base.path>${basedir}/..</base.path>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>${parent.groupId}</groupId>
-            <artifactId>peach-common</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-    </dependencies>
 </project>

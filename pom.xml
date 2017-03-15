@@ -11,6 +11,8 @@
     <modules>
         <module>peach-server</module>
         <module>peach-client</module>
+        <module>peach-common</module>
+        <module>peach-test</module>
     </modules>
     <name>Peach project - Parent</name>
     <url>https://www.proteus-bigdata.com/</url>
@@ -39,6 +41,8 @@
     <properties>
         <scala.version>2.11.6</scala.version>
         <junit.version>4.12</junit.version>
+        <akka.version>2.3-custom</akka.version>
+        <scala.binary.version>2.11</scala.binary.version>
 
         <base.path>${basedir}</base.path>
         <scalastyle.fail>true</scalastyle.fail>
@@ -51,11 +55,44 @@
             <version>${scala.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-actor_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-remote_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-slf4j_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-contrib_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.data-artisans</groupId>
+            <artifactId>flakka-testkit_${scala.binary.version}</artifactId>
+            <version>${akka.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
+
     </dependencies>
     <build>
     <pluginManagement>

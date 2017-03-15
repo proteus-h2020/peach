@@ -19,6 +19,24 @@ package com.proteus.peach.client
 /**
  * Sample file.
  */
-object ClientApp extends App{
-  println("Hello world")
+object ClientApp extends App {
+  println("Peach Client")
+  /* implicit val timeout = Timeout(1, TimeUnit.SECONDS)
+
+   val system = ActorSystem("PeachClient")
+
+   val initialContacts = Set(
+     system.actorSelection("akka.tcp://PeachServer@127.0.0.1:2552/user/receptionist"))
+
+   val c = system.actorOf(ClusterClient.props(initialContacts), "client")
+
+
+
+   c ? ClusterClient.Send("/user/comm", Put("hola", "adios"), localAffinity = true)
+
+
+   val future = c ? ClusterClient.Send("/user/comm", Get("hola"), localAffinity = true)
+
+   future.map(println)*/
+
 }

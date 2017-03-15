@@ -16,9 +16,20 @@
 
 package com.proteus.peach.server
 
+
 /**
  * Simple server app.
  */
-object ServerApp extends App{
+object ServerApp extends App {
   println("Hello World!")
+
+  /*val system = ActorSystem("PeachServer")
+
+  val server: CacheServer = TypedActor(system).typedActorOf(TypedProps[MockupCacheServer](),"default")
+
+  val comm = system.actorOf(PeachServerReceptor.props(server),"comm")
+
+  ClusterReceptionistExtension(system).registerService(comm)*/
+
+
 }
