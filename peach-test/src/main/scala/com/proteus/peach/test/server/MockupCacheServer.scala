@@ -3,6 +3,10 @@ package com.proteus.peach.test.server
 import java.util.{HashMap => JHashMap}
 import java.util.{Map => JMap}
 
+import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+import com.proteus.peach.common.server.CacheServer
+
 
 object MockupCacheServer{
   /**

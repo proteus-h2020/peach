@@ -3,7 +3,7 @@ package com.proteus.peach.common.server
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 
-import scala.concurrent.Future
+
 
 /**
  * Trait with the cache methods.

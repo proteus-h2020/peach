@@ -10,12 +10,46 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>peach-test</artifactId>
+    <name>Peach project - Test</name>
+    <url>https://www.proteus-bigdata.com/</url>
+
+    <developers>
+        <developer>
+            <id>aagea</id>
+            <name>Alvaro Agea</name>
+            <email>alvaro@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>dhiguero</id>
+            <name>Daniel Higuero</name>
+            <email>daniel@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>jtirado</id>
+            <name>Juan Manuel Tirado</name>
+            <email>juan@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <!-- Make scala style possible... -->
+        <base.path>${basedir}/..</base.path>
+    </properties>
+
 
     <dependencies>
         <dependency>
             <groupId>${parent.groupId}</groupId>
             <artifactId>peach-common</artifactId>
             <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
         </dependency>
     </dependencies>
 
