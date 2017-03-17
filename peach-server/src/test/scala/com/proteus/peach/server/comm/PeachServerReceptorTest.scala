@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.testkit.TestActorRef
-import com.proteus.peach.test.server.MockupCacheServer
+import com.proteus.peach.test.server.MockupCache$
 import org.junit.Assert
 import org.junit.Test
 
@@ -35,7 +35,7 @@ class PeachServerReceptorTest {
   /**
    * Mockup cache server.
    */
-  val cacheServer = new MockupCacheServer()
+  val cacheServer = new MockupCache()
 
   /**
    * Tested receptor.

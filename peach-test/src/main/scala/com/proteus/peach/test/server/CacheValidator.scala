@@ -1,17 +1,17 @@
 package com.proteus.peach.test.server
 
-import com.proteus.peach.common.server.CacheServer
+import com.proteus.peach.common.server.Cache
 import org.junit.Assert
 import org.junit.Test
 
 /**
  * Cache server logic validator.
  */
-trait CacheServerValidator {
+trait CacheValidator {
   /**
    * Cache server instance.
    */
-  val cacheServer: CacheServer
+  val cacheServer: Cache
 
   /**
    * Simple test put and get key.

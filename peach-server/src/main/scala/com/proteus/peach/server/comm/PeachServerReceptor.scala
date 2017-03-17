@@ -6,7 +6,7 @@ import akka.actor.Props
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.Put
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
-import com.proteus.peach.common.server.CacheServer
+import com.proteus.peach.common.server.Cache
 
 /**
  * Companion object for PeachServerReceptor class.
@@ -17,7 +17,7 @@ object PeachServerReceptor{
    * @param cacheServer The associated cache server.
    * @return Prop for a this actor.
    */
-  def props(cacheServer: CacheServer): Props = Props(new PeachServerReceptor(cacheServer))
+  def props(cacheServer: Cache): Props = Props(new PeachServerReceptor(cacheServer))
 }
 
 /**
@@ -25,7 +25,7 @@ object PeachServerReceptor{
  *
  * @param cacheServer Cache server implementation.
  */
-class PeachServerReceptor(cacheServer: CacheServer) extends Actor {
+class PeachServerReceptor(cacheServer: Cache) extends Actor {
 
   /**
    * This defines the initial actor behavior, it must return a partial function

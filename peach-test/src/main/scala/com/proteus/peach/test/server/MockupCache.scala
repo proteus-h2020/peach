@@ -5,10 +5,10 @@ import java.util.{Map => JMap}
 
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
-import com.proteus.peach.common.server.CacheServer
+import com.proteus.peach.common.server.Cache
 
 
-object MockupCacheServer{
+object MockupCache{
   /**
    * Internal in memory cache.
    */
@@ -21,7 +21,7 @@ object MockupCacheServer{
  *
  * @param name Name of the server.
  */
-class MockupCacheServer(name: String) extends CacheServer {
+class MockupCache(name: String) extends Cache {
 
   /**
    * Constructor without parameters.
@@ -38,7 +38,7 @@ class MockupCacheServer(name: String) extends CacheServer {
    * @return A put response.
    */
   override def put(key: String, value: String): PutResponse = {
-    MockupCacheServer.cache.put(key, value)
+    MockupCache.cache.put(key, value)
     PutResponse()
   }
 
@@ -49,7 +49,7 @@ class MockupCacheServer(name: String) extends CacheServer {
    * @return The value if exist.
    */
   override def get(key: String): GetResponse = {
-    GetResponse(Option(MockupCacheServer.cache.get(key)))
+    GetResponse(Option(MockupCache.cache.get(key)))
   }
 }
 

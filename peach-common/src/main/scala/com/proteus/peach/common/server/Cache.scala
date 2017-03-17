@@ -8,7 +8,7 @@ import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 /**
  * Trait with the cache methods.
  */
-trait CacheServer {
+trait Cache {
   /**
    * Put a element in the cache.
    *
