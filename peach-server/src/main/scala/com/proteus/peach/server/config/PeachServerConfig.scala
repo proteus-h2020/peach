@@ -26,11 +26,11 @@ import com.typesafe.config.ConfigValueFactory
 
 import scala.collection.JavaConversions.seqAsJavaList
 
-object ServerConfig {
+object PeachServerConfig {
   /**
    * Default config values.
    */
-  lazy val DefaultConfig = new ServerConfig {
+  lazy val DefaultConfig = new PeachServerConfig {
     /**
      * Server actor name.
      */
@@ -61,7 +61,7 @@ object ServerConfig {
    * @param serverConfig The server config.
    * @return The Config value.
    */
-  def createAkkaConfig(serverConfig: ServerConfig): Config = {
+  def createAkkaConfig(serverConfig: PeachServerConfig): Config = {
     val fileConfig = ConfigFactory.load().getConfig(serverConfig.akkaConfig)
 
     val contactPoints = serverConfig.contactPoints.stream().map[String](new Function[String, String] {
@@ -77,7 +77,7 @@ object ServerConfig {
   }
 }
 
-trait ServerConfig {
+trait PeachServerConfig {
 
   /**
    * Akka default config.

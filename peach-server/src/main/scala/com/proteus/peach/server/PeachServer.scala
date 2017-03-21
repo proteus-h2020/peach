@@ -20,10 +20,10 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterReceptionistExtension
-import com.proteus.peach.server.cache.MockupServerCache
-import com.proteus.peach.server.cache.ServerCache
-import com.proteus.peach.server.comm.AkkaServerReceptor
-import com.proteus.peach.server.config.ServerConfig
+import com.proteus.peach.server.cache.MockupExternalServerCache
+import com.proteus.peach.server.cache.ExternalServerCache
+import com.proteus.peach.server.comm.AkkaPeachServerReceptor
+import com.proteus.peach.server.config.PeachServerConfig
 
 import scala.concurrent.duration.Duration
 
@@ -33,18 +33,18 @@ import scala.concurrent.duration.Duration
  * @param serverCache Instance of the server cache.
  * @param config      Configuration instance.
  */
-class Server(serverCache: ServerCache = new MockupServerCache(), config: ServerConfig = ServerConfig.DefaultConfig) {
+class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(), config: PeachServerConfig = PeachServerConfig.DefaultConfig) {
 
   /**
    * System actor.
    */
-  private[server] val system = ActorSystem(config.serverName, ServerConfig.createAkkaConfig(config))
+  private[server] val system = ActorSystem(config.serverName, PeachServerConfig.createAkkaConfig(config))
 
   /**
    * Init method.
    */
   def init(): Unit = {
-    val comm = system.actorOf(AkkaServerReceptor.props(serverCache), "comm")
+    val comm = system.actorOf(AkkaPeachServerReceptor.props(serverCache), "comm")
     ClusterReceptionistExtension(system).registerService(comm)
     Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
   }

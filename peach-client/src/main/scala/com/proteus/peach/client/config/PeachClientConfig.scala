@@ -25,11 +25,11 @@ import scala.concurrent.duration.Duration
 /**
  * Companion object fo PeachClientConfig.
  */
-object ClientConfig {
+object PeachClientConfig {
   /**
    * Default config values.
    */
-  lazy val DefaultConfig = new ClientConfig {
+  lazy val DefaultConfig = new PeachClientConfig {
     /**
      * Address of receptor.
      */
@@ -70,7 +70,7 @@ object ClientConfig {
 /**
  * Client config.
  */
-trait ClientConfig {
+trait PeachClientConfig {
   /**
    * Client actor system name.
    */

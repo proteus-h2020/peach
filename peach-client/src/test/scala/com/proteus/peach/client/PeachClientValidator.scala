@@ -22,11 +22,11 @@ import org.junit.Test
 /**
  * Client cache validator.
  */
-trait ClientValidator {
+trait PeachClientValidator {
   /**
    * Client cache to test.
    */
-  val clientCache:Client
+  val clientCache:PeachClient
 
 
   /**

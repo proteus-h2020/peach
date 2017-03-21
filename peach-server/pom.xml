@@ -66,12 +66,6 @@
             <artifactId>flakka-cluster_${scala.binary.version}</artifactId>
             <version>${akka.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>peach-test</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
 </project>

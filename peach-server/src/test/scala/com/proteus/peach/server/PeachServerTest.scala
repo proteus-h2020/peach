@@ -34,11 +34,11 @@ import scala.concurrent.Await
 import scala.concurrent.duration.FiniteDuration
 import scala.util.Success
 
-object ServerTest {
+object PeachServerTest {
   /**
    * Server instance.
    */
-  lazy val Server: Server = new Server()
+  lazy val Server: PeachServer = new PeachServer()
 
   /**
    * Init cache server.
@@ -57,11 +57,11 @@ object ServerTest {
   }
 }
 
-class ServerTest {
+class PeachServerTest {
   /**
    * Selector of the comm actor.
    */
-  val commActor: ActorSelection = ServerTest.Server.system.actorSelection("/user/comm")
+  val commActor: ActorSelection = PeachServerTest.Server.system.actorSelection("/user/comm")
 
 
   /**

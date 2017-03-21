@@ -16,12 +16,40 @@
 
 package com.proteus.peach.client
 
-/**
- * Mockup client cache tests.
- */
-class MockupClientTest extends ClientValidator {
+import java.util.concurrent.TimeUnit
+
+import com.proteus.peach.server.PeachServer
+import org.junit.AfterClass
+import org.junit.BeforeClass
+
+import scala.concurrent.duration.Duration
+
+object PeachAkkaClientTest {
+  /**
+   * Server instance.
+   */
+  lazy val Server: PeachServer = new PeachServer()
+
+  /**
+   * Init cache server.
+   */
+  @BeforeClass
+  def beforeAll(): Unit = {
+    Server.init()
+  }
+
+  /**
+   * Stop cache server.
+   */
+  @AfterClass
+  def afterAll(): Unit = {
+    Server.stop()
+  }
+}
+
+class PeachAkkaClientTest extends PeachClientValidator {
   /**
    * Client cache to test.
    */
-  override val clientCache: Client = new MockupClient
+  override lazy val clientCache: PeachClient = PeachAkkaClient()
 }

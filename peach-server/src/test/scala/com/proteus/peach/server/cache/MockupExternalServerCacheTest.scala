@@ -19,11 +19,11 @@ package com.proteus.peach.server.cache
 import org.junit.AfterClass
 import org.junit.BeforeClass
 
-object MockupServerCacheTest {
+object MockupExternalServerCacheTest {
   /**
    * Cache server.
    */
-  lazy val CacheServer: ServerCache = new MockupServerCache()
+  lazy val CacheServer: ExternalServerCache = new MockupExternalServerCache()
 
   /**
    * Init cache server.
@@ -42,9 +42,9 @@ object MockupServerCacheTest {
   }
 }
 
-class MockupServerCacheTest extends CacheValidator {
+class MockupExternalServerCacheTest extends ExternalCacheValidator {
   /**
    * Cache server instance.
    */
-  override val cacheServer: ServerCache = MockupServerCacheTest.CacheServer
+  override val cacheServer: ExternalServerCache = MockupExternalServerCacheTest.CacheServer
 }

@@ -22,12 +22,12 @@ import org.junit.Test
 /**
  * Cache server logic validator.
  */
-trait CacheValidator {
+trait ExternalCacheValidator {
 
   /**
    * Cache server instance.
    */
-  val cacheServer: ServerCache
+  val cacheServer: ExternalServerCache
 
   /**
    * Simple test put and get key.

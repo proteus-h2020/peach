@@ -16,19 +16,31 @@
 
 package com.proteus.peach.server.cache
 
+import java.util.{HashMap => JHashMap}
+import java.util.{Map => JMap}
+
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 
 
 /**
- * Trait with the cache methods.
+ * Mockup cache server.
+ *
+ * @param name Name of the server.
  */
-trait ServerCache {
+class MockupExternalServerCache(name: String) extends ExternalServerCache {
+  /**
+   * Internal in memory cache.
+   */
+
+  val cache: JMap[String, String] = new JHashMap[String, String]()
 
   /**
-   * Init signal.
+   * Constructor without parameters.
+   *
+   * @return A object with default name.
    */
-  def init():Unit
+  def this() = this("default")
 
   /**
    * Put a element in the cache.
@@ -37,8 +49,10 @@ trait ServerCache {
    * @param value Value data.
    * @return A put response.
    */
-  def put(key: String, value: String): PutResponse
-
+  override def put(key: String, value: String): PutResponse = {
+    this.cache.put(key, value)
+    PutResponse()
+  }
 
   /**
    * Recover a element.
@@ -46,10 +60,19 @@ trait ServerCache {
    * @param key Searched key
    * @return The value if exist.
    */
-  def get(key: String): GetResponse
+  override def get(key: String): GetResponse = {
+    GetResponse(Option(this.cache.get(key)))
+  }
+
+  /**
+   * Init signal.
+   */
+  override def init(): Unit = {}
 
   /**
    * Stop signal.
    */
-  def stop():Unit
+  override def stop(): Unit = {}
 }
+
+

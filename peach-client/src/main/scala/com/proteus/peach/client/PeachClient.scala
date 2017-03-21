@@ -16,16 +16,10 @@
 
 package com.proteus.peach.client
 
-import java.util.{HashMap => JHashMap}
-import java.util.{Map => JMap}
-
-class MockupClient extends Client {
-
-  /**
-   * Internal in memory cache.
-   */
-
-  val cache: JMap[String, String] = new JHashMap[String, String]()
+/**
+ * Peach client cache.
+ */
+trait PeachClient {
 
   /**
    * Put a element in the cache.
@@ -34,9 +28,7 @@ class MockupClient extends Client {
    * @param value Value data.
    * @return A put response.
    */
-  override def put(key: String, value: String): Unit = {
-    this.cache.put(key, value)
-  }
+  def put(key: String, value: String): Unit
 
   /**
    * Recover a element.
@@ -44,7 +36,5 @@ class MockupClient extends Client {
    * @param key Searched key
    * @return The value if exist.
    */
-  override def get(key: String): Option[String] = {
-    Option(this.cache.get(key))
-  }
+  def get(key: String): Option[String]
 }

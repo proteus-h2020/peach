@@ -30,14 +30,14 @@ import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
-import com.proteus.peach.server.cache.MockupServerCache
+import com.proteus.peach.server.cache.MockupExternalServerCache
 
 import scala.util.Success
 
 /**
  * Test of peach receptor.
  */
-class AkkaServerReceptorTest {
+class AkkaPeachServerReceptorTest {
   /**
    * Implicit actor system.
    */
@@ -51,12 +51,12 @@ class AkkaServerReceptorTest {
   /**
    * Mockup cache server.
    */
-  val cacheServer = new MockupServerCache()
+  val cacheServer = new MockupExternalServerCache()
 
   /**
    * Tested receptor.
    */
-  val receptor = TestActorRef(AkkaServerReceptor.props(cacheServer))
+  val receptor = TestActorRef(AkkaPeachServerReceptor.props(cacheServer))
 
 
   /**

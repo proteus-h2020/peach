@@ -16,40 +16,35 @@
 
 package com.proteus.peach.client
 
-import java.util.concurrent.TimeUnit
+import java.util.{HashMap => JHashMap}
+import java.util.{Map => JMap}
 
-import com.proteus.peach.server.Server
-import org.junit.AfterClass
-import org.junit.BeforeClass
-
-import scala.concurrent.duration.Duration
-
-object AkkaClientTest {
-  /**
-   * Server instance.
-   */
-  lazy val Server: Server = new Server()
+class MockupPeachClient extends PeachClient {
 
   /**
-   * Init cache server.
+   * Internal in memory cache.
    */
-  @BeforeClass
-  def beforeAll(): Unit = {
-    Server.init()
+
+  val cache: JMap[String, String] = new JHashMap[String, String]()
+
+  /**
+   * Put a element in the cache.
+   *
+   * @param key   Searched key.
+   * @param value Value data.
+   * @return A put response.
+   */
+  override def put(key: String, value: String): Unit = {
+    this.cache.put(key, value)
   }
 
   /**
-   * Stop cache server.
+   * Recover a element.
+   *
+   * @param key Searched key
+   * @return The value if exist.
    */
-  @AfterClass
-  def afterAll(): Unit = {
-    Server.stop()
+  override def get(key: String): Option[String] = {
+    Option(this.cache.get(key))
   }
-}
-
-class AkkaClientTest extends ClientValidator {
-  /**
-   * Client cache to test.
-   */
-  override lazy val clientCache: Client = AkkaClient()
 }

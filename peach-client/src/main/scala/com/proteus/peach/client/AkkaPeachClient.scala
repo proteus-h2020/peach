@@ -23,8 +23,8 @@ import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterClient
 import akka.pattern.ask
 import akka.util.Timeout
-import com.proteus.peach.client.AkkaClient.Log
-import com.proteus.peach.client.config.ClientConfig
+import com.proteus.peach.client.PeachAkkaClient.Log
+import com.proteus.peach.client.config.PeachClientConfig
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
@@ -39,12 +39,12 @@ import scala.concurrent.TimeoutException
 /**
  * PeachClientCache companion object.
  */
-object AkkaClient {
+object PeachAkkaClient {
 
   /**
    * Logger instance.
    */
-  val Log: Logger = LoggerFactory.getLogger(classOf[AkkaClient])
+  val Log: Logger = LoggerFactory.getLogger(classOf[PeachAkkaClient])
 
   /**
    * Create a PeachClientCache init the actor system.
@@ -52,7 +52,7 @@ object AkkaClient {
    * @param config Peach client config.
    * @return The cache object.
    */
-  def apply(config: ClientConfig = ClientConfig.DefaultConfig): Client = {
+  def apply(config: PeachClientConfig = PeachClientConfig.DefaultConfig): PeachClient = {
     val system = ActorSystem(config.clientName, ConfigFactory.load().getConfig(config.akkaConfig))
 
     val contactPoints = config.contactPoints.toArray[String](new Array[String](config.contactPoints.size()))
@@ -62,7 +62,7 @@ object AkkaClient {
 
     val client = system.actorOf(ClusterClient.props(initialContacts))
 
-    new AkkaClient(client, ClientConfig.DefaultConfig)
+    new PeachAkkaClient(client, PeachClientConfig.DefaultConfig)
   }
 
 }
@@ -74,7 +74,7 @@ object AkkaClient {
  * @param clusterClient Cluster client actor.
  * @param config        Configuration properties.
  */
-class AkkaClient(clusterClient: ActorRef, config: ClientConfig) extends Client {
+class PeachAkkaClient(clusterClient: ActorRef, config: PeachClientConfig) extends PeachClient {
   /**
    * Request timeout.
    */
