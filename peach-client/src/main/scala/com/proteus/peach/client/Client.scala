@@ -14,39 +14,27 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.common.comm
+package com.proteus.peach.client
 
 /**
- * Server messages.
+ * Peach client cache.
  */
-object PeachServerMessage {
+trait Client {
 
   /**
-   * Put key/value.
+   * Put a element in the cache.
    *
-   * @param key   Key.
-   * @param value Value key.
+   * @param key   Searched key.
+   * @param value Value data.
+   * @return A put response.
    */
-  case class Put(key: String, value: String)
+  def put(key: String, value: String): Unit
 
   /**
-   * Put response.
-   */
-  case class PutResponse()
-
-  /**
-   * Get value sync.
+   * Recover a element.
    *
-   * @param key Key.
+   * @param key Searched key
+   * @return The value if exist.
    */
-  case class Get(key: String)
-
-
-  /**
-   * Get response.
-   *
-   * @param value Recover value.
-   */
-  case class GetResponse(value: Option[String])
-
+  def get(key: String): Option[String]
 }

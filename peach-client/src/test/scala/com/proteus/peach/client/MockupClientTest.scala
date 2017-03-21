@@ -14,39 +14,14 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.common.comm
+package com.proteus.peach.client
 
 /**
- * Server messages.
+ * Mockup client cache tests.
  */
-object PeachServerMessage {
-
+class MockupClientTest extends ClientCacheValidator {
   /**
-   * Put key/value.
-   *
-   * @param key   Key.
-   * @param value Value key.
+   * Client cache to test.
    */
-  case class Put(key: String, value: String)
-
-  /**
-   * Put response.
-   */
-  case class PutResponse()
-
-  /**
-   * Get value sync.
-   *
-   * @param key Key.
-   */
-  case class Get(key: String)
-
-
-  /**
-   * Get response.
-   *
-   * @param value Recover value.
-   */
-  case class GetResponse(value: Option[String])
-
+  override val clientCache: Client = new MockupClient
 }

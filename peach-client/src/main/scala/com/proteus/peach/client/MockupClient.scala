@@ -14,39 +14,37 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.common.comm
+package com.proteus.peach.client
 
-/**
- * Server messages.
- */
-object PeachServerMessage {
+import java.util.{HashMap => JHashMap}
+import java.util.{Map => JMap}
+
+class MockupClient extends Client {
 
   /**
-   * Put key/value.
+   * Internal in memory cache.
+   */
+
+  val cache: JMap[String, String] = new JHashMap[String, String]()
+
+  /**
+   * Put a element in the cache.
    *
-   * @param key   Key.
-   * @param value Value key.
+   * @param key   Searched key.
+   * @param value Value data.
+   * @return A put response.
    */
-  case class Put(key: String, value: String)
+  override def put(key: String, value: String): Unit = {
+    this.cache.put(key, value)
+  }
 
   /**
-   * Put response.
-   */
-  case class PutResponse()
-
-  /**
-   * Get value sync.
+   * Recover a element.
    *
-   * @param key Key.
+   * @param key Searched key
+   * @return The value if exist.
    */
-  case class Get(key: String)
-
-
-  /**
-   * Get response.
-   *
-   * @param value Recover value.
-   */
-  case class GetResponse(value: Option[String])
-
+  override def get(key: String): Option[String] = {
+    Option(this.cache.get(key))
+  }
 }

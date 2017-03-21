@@ -14,39 +14,42 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.common.comm
+package com.proteus.peach.server.cache
+
+import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+
 
 /**
- * Server messages.
+ * Trait with the cache methods.
  */
-object PeachServerMessage {
+trait ServerCache {
 
   /**
-   * Put key/value.
+   * Init signal.
+   */
+  def init():Unit
+
+  /**
+   * Put a element in the cache.
    *
-   * @param key   Key.
-   * @param value Value key.
+   * @param key   Searched key.
+   * @param value Value data.
+   * @return A put response.
    */
-  case class Put(key: String, value: String)
+  def put(key: String, value: String): PutResponse
+
 
   /**
-   * Put response.
-   */
-  case class PutResponse()
-
-  /**
-   * Get value sync.
+   * Recover a element.
    *
-   * @param key Key.
+   * @param key Searched key
+   * @return The value if exist.
    */
-  case class Get(key: String)
-
+  def get(key: String): GetResponse
 
   /**
-   * Get response.
-   *
-   * @param value Recover value.
+   * Stop signal.
    */
-  case class GetResponse(value: Option[String])
-
+  def stop():Unit
 }

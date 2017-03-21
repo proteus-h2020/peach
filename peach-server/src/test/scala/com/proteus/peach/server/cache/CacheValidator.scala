@@ -1,6 +1,21 @@
-package com.proteus.peach.test.server
+/*
+ * Copyright (C) 2017 The Proteus Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import com.proteus.peach.common.server.Cache
+package com.proteus.peach.server.cache
+
 import org.junit.Assert
 import org.junit.Test
 
@@ -8,10 +23,11 @@ import org.junit.Test
  * Cache server logic validator.
  */
 trait CacheValidator {
+
   /**
    * Cache server instance.
    */
-  val cacheServer: Cache
+  val cacheServer: ServerCache
 
   /**
    * Simple test put and get key.

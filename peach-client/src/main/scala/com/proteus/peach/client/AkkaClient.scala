@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2017 The Proteus Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.proteus.peach.client
 
 import java.util.concurrent.TimeUnit
@@ -7,7 +23,7 @@ import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterClient
 import akka.pattern.ask
 import akka.util.Timeout
-import com.proteus.peach.client.config.PeachClientConfig
+import com.proteus.peach.client.config.ClientConfig
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
@@ -21,7 +37,7 @@ import scala.concurrent.TimeoutException
 /**
  * PeachClientCache companion object.
  */
-object AkkaClientCache {
+object AkkaClient {
 
   /**
    * Create a PeachClientCache init the actor system.
@@ -29,7 +45,7 @@ object AkkaClientCache {
    * @param config Peach client config.
    * @return The cache object.
    */
-  def apply(config: PeachClientConfig = PeachClientConfig.DefaultConfig): PeachClientCache = {
+  def apply(config: ClientConfig = ClientConfig.DefaultConfig): Client = {
     val system = ActorSystem(config.clientName, ConfigFactory.load().getConfig(config.akkaConfig))
 
     val contactPoints = config.contactPoints.toArray[String](new Array[String](config.contactPoints.size()))
@@ -39,7 +55,7 @@ object AkkaClientCache {
 
     val client = system.actorOf(ClusterClient.props(initialContacts))
 
-    new AkkaClientCache(client, PeachClientConfig.DefaultConfig)
+    new AkkaClient(client, ClientConfig.DefaultConfig)
   }
 
 }
@@ -51,7 +67,7 @@ object AkkaClientCache {
  * @param clusterClient Cluster client actor.
  * @param config        Configuration properties.
  */
-class AkkaClientCache(clusterClient: ActorRef, config: PeachClientConfig) extends PeachClientCache {
+class AkkaClient(clusterClient: ActorRef, config: ClientConfig) extends Client {
 
   /**
    * Request timeout.
