@@ -1,19 +1,18 @@
 package com.proteus.peach.server.comm
 
 import akka.actor.Actor
-import akka.actor.Actor.Receive
 import akka.actor.Props
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.Put
-import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 import com.proteus.peach.common.server.Cache
 
 /**
  * Companion object for PeachServerReceptor class.
  */
-object PeachServerReceptor{
+object PeachServerReceptor {
   /**
    * Create props for a PeachServerReceptor actor.
+   *
    * @param cacheServer The associated cache server.
    * @return Prop for a this actor.
    */

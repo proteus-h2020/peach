@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.testkit.TestActorRef
-import com.proteus.peach.test.server.MockupCache$
 import org.junit.Assert
 import org.junit.Test
 
@@ -15,6 +14,7 @@ import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+import com.proteus.peach.test.server.MockupCache
 
 import scala.util.Success
 

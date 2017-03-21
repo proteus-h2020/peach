@@ -1,9 +1,12 @@
 package com.proteus.peach.client
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorRef
 import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterClient
 import akka.pattern.ask
+import akka.util.Timeout
 import com.proteus.peach.client.config.PeachClientConfig
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
@@ -48,12 +51,12 @@ object AkkaClientCache {
  * @param clusterClient Cluster client actor.
  * @param config        Configuration properties.
  */
-class AkkaClientCache(clusterClient: ActorRef, config: PeachClientConfig) {
+class AkkaClientCache(clusterClient: ActorRef, config: PeachClientConfig) extends PeachClientCache {
 
   /**
    * Request timeout.
    */
-  private implicit val timeout = this.config.timeout
+  implicit val timeout: Timeout = Timeout(this.config.timeout.toSeconds, TimeUnit.SECONDS)
 
   /**
    * Put a element in the cache.
@@ -66,11 +69,11 @@ class AkkaClientCache(clusterClient: ActorRef, config: PeachClientConfig) {
    */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  def put(key: String, value: String): Unit = {
+  override def put(key: String, value: String): Unit = {
     clusterClient ? ClusterClient.Send(this.config.receptorAddress, Put(key, value),
       localAffinity = true) match {
       case future: Future[PutResponse] => {
-        Await.result(future, timeout)
+        Await.result(future, this.config.timeout)
       }
       case _ => {
         throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
@@ -89,11 +92,11 @@ class AkkaClientCache(clusterClient: ActorRef, config: PeachClientConfig) {
    */
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
-  def get(key: String): Option[String] = {
+  override def get(key: String): Option[String] = {
     clusterClient ? ClusterClient.Send(this.config.receptorAddress, Get(key),
       localAffinity = true) match {
       case future: Future[GetResponse] => {
-        val result = Await.result(future, timeout)
+        val result = Await.result(future, this.config.timeout)
         result.value
       }
       case _ => {
