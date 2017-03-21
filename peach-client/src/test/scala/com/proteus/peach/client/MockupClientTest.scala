@@ -19,7 +19,7 @@ package com.proteus.peach.client
 /**
  * Mockup client cache tests.
  */
-class MockupClientTest extends ClientCacheValidator {
+class MockupClientTest extends ClientValidator {
   /**
    * Client cache to test.
    */

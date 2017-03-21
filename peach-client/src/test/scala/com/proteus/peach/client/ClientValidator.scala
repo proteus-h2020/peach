@@ -22,7 +22,7 @@ import org.junit.Test
 /**
  * Client cache validator.
  */
-trait ClientCacheValidator {
+trait ClientValidator {
   /**
    * Client cache to test.
    */

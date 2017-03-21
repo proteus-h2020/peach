@@ -16,10 +16,13 @@
 
 package com.proteus.peach.server.config
 
+import java.util.function.Function
+import java.util.stream.Collectors
 import java.util.{List => JList}
 
-import com.proteus.peach.server.cache.MockupServerCache
-import com.proteus.peach.server.cache.ServerCache
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
+import com.typesafe.config.ConfigValueFactory
 
 import scala.collection.JavaConversions.seqAsJavaList
 
@@ -51,6 +54,27 @@ object ServerConfig {
      */
     override val akkaConfig: String = "default-server"
   }
+
+  /**
+   * Resolve akka config.
+   *
+   * @param serverConfig The server config.
+   * @return The Config value.
+   */
+  def createAkkaConfig(serverConfig: ServerConfig): Config = {
+    val fileConfig = ConfigFactory.load().getConfig(serverConfig.akkaConfig)
+
+    val contactPoints = serverConfig.contactPoints.stream().map[String](new Function[String, String] {
+      override def apply(t: String): String = {
+        s"akka.tcp://${serverConfig.serverName}@$t"
+      }
+    }).collect(Collectors.toList[String])
+
+    fileConfig
+      .withValue("akka.remote.netty.tcp.hostname", ConfigValueFactory.fromAnyRef(serverConfig.hostname))
+      .withValue("akka.remote.netty.tcp.port", ConfigValueFactory.fromAnyRef(serverConfig.port))
+      .withValue("akka.cluster.seed-nodes", ConfigValueFactory.fromIterable(contactPoints))
+  }
 }
 
 trait ServerConfig {
@@ -80,7 +104,6 @@ trait ServerConfig {
    * List of contact points.
    */
   val contactPoints: JList[String]
-
 
 
 }

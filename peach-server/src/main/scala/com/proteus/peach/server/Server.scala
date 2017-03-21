@@ -16,12 +16,16 @@
 
 package com.proteus.peach.server
 
+import java.util.concurrent.TimeUnit
+
 import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterReceptionistExtension
 import com.proteus.peach.server.cache.MockupServerCache
 import com.proteus.peach.server.cache.ServerCache
 import com.proteus.peach.server.comm.AkkaServerReceptor
 import com.proteus.peach.server.config.ServerConfig
+
+import scala.concurrent.duration.Duration
 
 /**
  * Server cache launcher.
@@ -34,7 +38,7 @@ class Server(serverCache: ServerCache = new MockupServerCache(), config: ServerC
   /**
    * System actor.
    */
-  private val system = ActorSystem(config.serverName)
+  private[server] val system = ActorSystem(config.serverName, ServerConfig.createAkkaConfig(config))
 
   /**
    * Init method.
@@ -42,6 +46,7 @@ class Server(serverCache: ServerCache = new MockupServerCache(), config: ServerC
   def init(): Unit = {
     val comm = system.actorOf(AkkaServerReceptor.props(serverCache), "comm")
     ClusterReceptionistExtension(system).registerService(comm)
+    Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
   }
 
   /**

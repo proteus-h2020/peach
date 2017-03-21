@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.server.cache
+package com.proteus.peach.client
 
+import java.util.concurrent.TimeUnit
+
+import com.proteus.peach.server.Server
 import org.junit.AfterClass
 import org.junit.BeforeClass
 
-object MockupServerCacheTest {
+import scala.concurrent.duration.Duration
+
+object AkkaClientTest {
   /**
-   * Cache server.
+   * Server instance.
    */
-  lazy val CacheServer: ServerCache = new MockupServerCache()
+  lazy val Server: Server = new Server()
 
   /**
    * Init cache server.
    */
   @BeforeClass
   def beforeAll(): Unit = {
-    CacheServer.init()
+    Server.init()
   }
 
   /**
@@ -38,13 +43,13 @@ object MockupServerCacheTest {
    */
   @AfterClass
   def afterAll(): Unit = {
-    CacheServer.stop()
+    Server.stop()
   }
 }
 
-class MockupServerCacheTest extends CacheValidator {
+class AkkaClientTest extends ClientValidator {
   /**
-   * Cache server instance.
+   * Client cache to test.
    */
-  override val cacheServer: ServerCache = MockupServerCacheTest.CacheServer
+  override lazy val clientCache: Client = AkkaClient()
 }

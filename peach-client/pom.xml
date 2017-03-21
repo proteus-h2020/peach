@@ -61,5 +61,11 @@
             <artifactId>peach-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-server</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>Test</scope>
+        </dependency>
     </dependencies>
 </project>

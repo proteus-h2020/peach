@@ -23,21 +23,28 @@ import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterClient
 import akka.pattern.ask
 import akka.util.Timeout
+import com.proteus.peach.client.AkkaClient.Log
 import com.proteus.peach.client.config.ClientConfig
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 import com.typesafe.config.ConfigFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.Await
-import scala.concurrent.Future
 import scala.concurrent.TimeoutException
 
 /**
  * PeachClientCache companion object.
  */
 object AkkaClient {
+
+  /**
+   * Logger instance.
+   */
+  val Log: Logger = LoggerFactory.getLogger(classOf[AkkaClient])
 
   /**
    * Create a PeachClientCache init the actor system.
@@ -68,7 +75,6 @@ object AkkaClient {
  * @param config        Configuration properties.
  */
 class AkkaClient(clusterClient: ActorRef, config: ClientConfig) extends Client {
-
   /**
    * Request timeout.
    */
@@ -86,10 +92,11 @@ class AkkaClient(clusterClient: ActorRef, config: ClientConfig) extends Client {
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   override def put(key: String, value: String): Unit = {
-    clusterClient ? ClusterClient.Send(this.config.receptorAddress, Put(key, value),
-      localAffinity = true) match {
-      case future: Future[PutResponse] => {
-        Await.result(future, this.config.timeout)
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Put(key, value),
+      localAffinity = true)
+    Await.result(response, this.config.timeout) match {
+      case response: PutResponse => {
+        Log.debug(s"Correct insertion => ${response.toString}")
       }
       case _ => {
         throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
@@ -109,11 +116,11 @@ class AkkaClient(clusterClient: ActorRef, config: ClientConfig) extends Client {
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   override def get(key: String): Option[String] = {
-    clusterClient ? ClusterClient.Send(this.config.receptorAddress, Get(key),
-      localAffinity = true) match {
-      case future: Future[GetResponse] => {
-        val result = Await.result(future, this.config.timeout)
-        result.value
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Get(key),
+      localAffinity = true)
+    Await.result(response, this.config.timeout) match {
+      case response: GetResponse => {
+        response.value
       }
       case _ => {
         throw new UnsupportedOperationException("Receptor has sent an unexpected message.")

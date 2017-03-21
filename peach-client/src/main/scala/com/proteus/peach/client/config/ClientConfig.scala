@@ -17,10 +17,10 @@
 package com.proteus.peach.client.config
 
 import java.util.concurrent.TimeUnit
-import java.util.{List=>JList}
+import java.util.{List => JList}
 
-import scala.concurrent.duration.Duration
 import scala.collection.JavaConversions.seqAsJavaList
+import scala.concurrent.duration.Duration
 
 /**
  * Companion object fo PeachClientConfig.
@@ -74,8 +74,8 @@ trait ClientConfig {
   /**
    * Client actor system name.
    */
-  val clientName:String
-  
+  val clientName: String
+
   /**
    * Address of receptor.
    */
@@ -94,15 +94,15 @@ trait ClientConfig {
   /**
    * Server actor name.
    */
-  val serverName:String
+  val serverName: String
 
   /**
    * Address of the receptionist actor.
    */
-  val receptionistAddress:String
+  val receptionistAddress: String
 
   /**
    * List of contact points.
    */
-  val contactPoints:JList[String]
+  val contactPoints: JList[String]
 }
