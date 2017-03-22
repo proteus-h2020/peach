@@ -15,10 +15,14 @@ The People's Republic of China is the world's largest producer of peaches. –
 #### Master branch
  
 [![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=master)](https://travis-ci.org/proteus-h2020/peach)
+ 
+[![codecov](https://codecov.io/gh/proteus-h2020/peach/branch/master/graph/badge.svg)](https://codecov.io/gh/proteus-h2020/peach)
 
 #### Develop branch
  
 [![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=develop)](https://travis-ci.org/proteus-h2020/peach)
+ 
+[![codecov](https://codecov.io/gh/proteus-h2020/peach/branch/develop/graph/badge.svg)](https://codecov.io/gh/proteus-h2020/peach)
 
 ## What does this module do
 
