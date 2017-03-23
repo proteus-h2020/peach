@@ -19,6 +19,9 @@ package com.proteus.peach.client
 import java.util.{HashMap => JHashMap}
 import java.util.{Map => JMap}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 class MockupPeachClient extends PeachClient {
 
   /**
@@ -35,6 +38,9 @@ class MockupPeachClient extends PeachClient {
    * @return A put response.
    */
   override def put(key: String, value: String): Unit = {
+    if (Option(key).isEmpty) {
+      throw new IllegalArgumentException("The key must not be NULL.")
+    }
     this.cache.put(key, value)
   }
 
@@ -46,5 +52,40 @@ class MockupPeachClient extends PeachClient {
    */
   override def get(key: String): Option[String] = {
     Option(this.cache.get(key))
+  }
+
+  /**
+   * Get a element using an async approach.
+   *
+   * @param key Searched key.
+   * @return A future with the value.
+   */
+  override def getAsync(key: String): Future[Option[String]] = {
+    Future(Option(this.cache.get(key)))
+  }
+
+  /**
+   * Discards any cached value for key key.
+   *
+   * @param key Searched key.
+   */
+  override def invalidate(key: String): Unit = {
+    this.cache.remove(key)
+  }
+
+  /**
+   * Discards all entries in the cache.
+   */
+  override def invalidateAll(): Unit = {
+    this.cache.clear()
+  }
+
+  /**
+   * Returns the approximate number of entries in this cache.
+   *
+   * @return The approximate number of entries.
+   */
+  override def size(): Long = {
+    this.cache.size()
   }
 }

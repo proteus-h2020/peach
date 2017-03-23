@@ -27,13 +27,20 @@ import com.proteus.peach.client.PeachAkkaClient.Log
 import com.proteus.peach.client.config.PeachClientConfig
 import com.proteus.peach.common.comm.PeachServerMessage.Get
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.Invalidate
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateAll
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateResponse
 import com.proteus.peach.common.comm.PeachServerMessage.Put
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+import com.proteus.peach.common.comm.PeachServerMessage.Size
+import com.proteus.peach.common.comm.PeachServerMessage.SizeResponse
 import com.typesafe.config.ConfigFactory
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.TimeoutException
 
 /**
@@ -92,11 +99,14 @@ class PeachAkkaClient(clusterClient: ActorRef, config: PeachClientConfig) extend
   @throws(classOf[TimeoutException])
   @throws(classOf[InterruptedException])
   override def put(key: String, value: String): Unit = {
+    if (Option(key).isEmpty) {
+      throw new IllegalArgumentException("The key must not be NULL.")
+    }
     val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Put(key, value),
       localAffinity = true)
     Await.result(response, this.config.timeout) match {
-      case response: PutResponse => {
-        Log.debug(s"Correct insertion => ${response.toString}")
+      case PutResponse() => {
+        Log.debug(s"Correct insertion")
       }
       case _ => {
         throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
@@ -120,6 +130,94 @@ class PeachAkkaClient(clusterClient: ActorRef, config: PeachClientConfig) extend
       localAffinity = true)
     Await.result(response, this.config.timeout) match {
       case response: GetResponse => {
+        response.value
+      }
+      case _ => {
+        throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
+      }
+    }
+  }
+
+  /**
+   * Get a element using an async approach.
+   *
+   * @param key Searched key.
+   * @return A future with the value.
+   * @throws InterruptedException if the current thread is interrupted while waiting
+   * @throws TimeoutException     if after waiting for the specified time `awaitable` is still not ready
+   */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  override def getAsync(key: String): Future[Option[String]] = {
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Get(key),
+      localAffinity = true)
+    response.map {
+      case response: GetResponse => {
+        response.value
+      }
+      case _ => {
+        throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
+      }
+    }
+  }
+
+  /**
+   * Discards any cached value for key key.
+   *
+   * @param key Searched key.
+   * @throws InterruptedException if the current thread is interrupted while waiting
+   * @throws TimeoutException     if after waiting for the specified time `awaitable` is still not ready
+   */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  override def invalidate(key: String): Unit = {
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Invalidate(key),
+      localAffinity = true)
+    Await.result(response, this.config.timeout) match {
+      case InvalidateResponse() => {
+        Log.debug(s"Correct invalidation.")
+      }
+      case _ => {
+        throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
+      }
+    }
+  }
+
+  /**
+   * Discards all entries in the cache.
+   *
+   * @throws InterruptedException if the current thread is interrupted while waiting
+   * @throws TimeoutException     if after waiting for the specified time `awaitable` is still not ready
+   */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  override def invalidateAll(): Unit = {
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, InvalidateAll(),
+      localAffinity = true)
+    Await.result(response, this.config.timeout) match {
+      case InvalidateResponse() => {
+        Log.debug(s"Correct invalidation.")
+      }
+      case _ => {
+        throw new UnsupportedOperationException("Receptor has sent an unexpected message.")
+      }
+    }
+  }
+
+  /**
+   * Returns the approximate number of entries in this cache.
+   *
+   * @return The approximate number of entries.
+   * @throws InterruptedException if the current thread is interrupted while waiting
+   * @throws TimeoutException     if after waiting for the specified time `awaitable` is still not ready
+   */
+  @throws(classOf[TimeoutException])
+  @throws(classOf[InterruptedException])
+  override def size(): Long = {
+    val response = clusterClient ? ClusterClient.Send(this.config.receptorAddress, Size(),
+      localAffinity = true)
+    Await.result(response, this.config.timeout) match {
+      case response: SizeResponse => {
         response.value
       }
       case _ => {

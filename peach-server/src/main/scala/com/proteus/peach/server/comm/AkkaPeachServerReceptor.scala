@@ -19,7 +19,10 @@ package com.proteus.peach.server.comm
 import akka.actor.Actor
 import akka.actor.Props
 import com.proteus.peach.common.comm.PeachServerMessage.Get
+import com.proteus.peach.common.comm.PeachServerMessage.Invalidate
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateAll
 import com.proteus.peach.common.comm.PeachServerMessage.Put
+import com.proteus.peach.common.comm.PeachServerMessage.Size
 import com.proteus.peach.server.cache.ExternalServerCache
 
 /**
@@ -51,5 +54,8 @@ class AkkaPeachServerReceptor(cacheServer: ExternalServerCache) extends Actor {
   override def receive: Receive = {
     case Put(key, value) => sender ! this.cacheServer.put(key, value)
     case Get(key) => sender ! this.cacheServer.get(key)
+    case Invalidate(key) => sender ! this.cacheServer.invalidate(key)
+    case InvalidateAll() => sender ! this.cacheServer.invalidateAll()
+    case Size() => sender ! this.cacheServer.size()
   }
 }

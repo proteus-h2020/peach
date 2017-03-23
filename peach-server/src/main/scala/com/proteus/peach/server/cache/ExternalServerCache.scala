@@ -17,7 +17,9 @@
 package com.proteus.peach.server.cache
 
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+import com.proteus.peach.common.comm.PeachServerMessage.SizeResponse
 
 
 /**
@@ -28,7 +30,7 @@ trait ExternalServerCache {
   /**
    * Init signal.
    */
-  def init():Unit
+  def init(): Unit
 
   /**
    * Put a element in the cache.
@@ -49,7 +51,29 @@ trait ExternalServerCache {
   def get(key: String): GetResponse
 
   /**
+   * Discards any cached value for key key.
+   *
+   * @param key Searched key.
+   * @return Invalidate response.
+   */
+  def invalidate(key: String): InvalidateResponse
+
+  /**
+   * Discards all entries in the cache.
+   *
+   * @return Invalidate response.
+   */
+  def invalidateAll(): InvalidateResponse
+
+  /**
+   * Returns the approximate number of entries in this cache.
+   *
+   * @return The approximate number of entries.
+   */
+  def size(): SizeResponse
+
+  /**
    * Stop signal.
    */
-  def stop():Unit
+  def stop(): Unit
 }

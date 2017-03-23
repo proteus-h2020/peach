@@ -16,6 +16,8 @@
 
 package com.proteus.peach.client
 
+import scala.concurrent.Future
+
 /**
  * Peach client cache.
  */
@@ -37,4 +39,31 @@ trait PeachClient {
    * @return The value if exist.
    */
   def get(key: String): Option[String]
+
+  /**
+   * Get a element using an async approach.
+   *
+   * @param key Searched key.
+   * @return A future with the value.
+   */
+  def getAsync(key: String): Future[Option[String]]
+
+  /**
+   * Discards any cached value for key key.
+   *
+   * @param key Searched key.
+   */
+  def invalidate(key: String): Unit
+
+  /**
+   * Discards all entries in the cache.
+   */
+  def invalidateAll(): Unit
+
+  /**
+   * Returns the approximate number of entries in this cache.
+   *
+   * @return The approximate number of entries.
+   */
+  def size(): Long
 }

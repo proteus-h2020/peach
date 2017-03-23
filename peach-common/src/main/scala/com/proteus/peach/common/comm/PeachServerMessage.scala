@@ -41,6 +41,23 @@ object PeachServerMessage {
    */
   case class Get(key: String)
 
+  /**
+   * Invalidate value.
+   *
+   * @param key Key.
+   */
+  case class Invalidate(key: String)
+
+  /**
+   * Invalidate all cache.
+   */
+  case class InvalidateAll()
+
+  /**
+   * Invalidate Response.
+   */
+  case class InvalidateResponse()
+
 
   /**
    * Get response.
@@ -48,5 +65,16 @@ object PeachServerMessage {
    * @param value Recover value.
    */
   case class GetResponse(value: Option[String])
+
+  /**
+   * Get size.
+   */
+  case class Size()
+
+  /**
+   * Response of the size request.
+   * @param value Size value.
+   */
+  case class SizeResponse(value:Long)
 
 }

@@ -85,4 +85,5 @@ class AkkaPeachServerReceptorTest {
     Assert.assertNotNull("Response must no be null", responseGet)
     Assert.assertTrue("Response value must be empty.",responseGet.value.isEmpty)
   }
+  
 }
