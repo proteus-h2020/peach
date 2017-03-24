@@ -31,7 +31,7 @@ trait ExternalCacheValidator {
   val cacheServer: ExternalServerCache
 
   /**
-   * Remove al the entries in the cache.
+   * Remove all the entries in the cache.
    */
   @After
   def invalidateCache(): Unit = {
