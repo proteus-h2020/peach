@@ -19,20 +19,24 @@ package com.proteus.peach.server.comm
 import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
+import akka.pattern.ask
 import akka.testkit.TestActorRef
+import akka.util.Timeout
+import com.proteus.peach.common.comm.PeachServerMessage.Get
+import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.Invalidate
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateAll
+import com.proteus.peach.common.comm.PeachServerMessage.Put
+import com.proteus.peach.common.comm.PeachServerMessage.Size
+import com.proteus.peach.common.comm.PeachServerMessage.SizeResponse
+import com.proteus.peach.server.cache.MockupExternalServerCache
+import org.hamcrest.CoreMatchers
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 
 import scala.concurrent.Await
-import akka.pattern.ask
-import akka.util.Timeout
-import com.proteus.peach.common.comm.PeachServerMessage.Get
-import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
-import com.proteus.peach.common.comm.PeachServerMessage.Put
-import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
-import com.proteus.peach.server.cache.MockupExternalServerCache
-
-import scala.util.Success
+import scala.concurrent.duration.FiniteDuration
 
 /**
  * Test of peach receptor.
@@ -44,9 +48,14 @@ class AkkaPeachServerReceptorTest {
   implicit val system = ActorSystem()
 
   /**
+   * Timeout duration.
+   */
+  val duration: FiniteDuration = FiniteDuration(1, TimeUnit.SECONDS)
+
+  /**
    * Implicit timeout val.
    */
-  implicit val timeout = Timeout(1,TimeUnit.SECONDS)
+  implicit val timeout = Timeout(duration)
 
   /**
    * Mockup cache server.
@@ -58,6 +67,19 @@ class AkkaPeachServerReceptorTest {
    */
   val receptor = TestActorRef(AkkaPeachServerReceptor.props(cacheServer))
 
+  /**
+   * Remove all the entries in the cache.
+   */
+  @After
+  def invalidateCache(): Unit = {
+    val invalidateFuture = receptor ? InvalidateAll()
+    Await.result(invalidateFuture, this.duration)
+
+    val sizeFuture = receptor ? Size()
+    val sizeResponse = Await.result(sizeFuture, this.duration).asInstanceOf[SizeResponse]
+    Assert.assertEquals("The size must be 0", 0L, sizeResponse.value)
+  }
+
 
   /**
    * Simple test put and get key.
@@ -67,22 +89,63 @@ class AkkaPeachServerReceptorTest {
     val key = "basicTestKey"
     val value = "basicTestValue"
 
-    val Success(responsePut:PutResponse) = (receptor ? Put(key,value)).value.get
-    val Success(responseGet:GetResponse)= (receptor ? Get(key)).value.get
-    Assert.assertNotNull("ResponsePut must no be null", responsePut)
-    Assert.assertNotNull("ResponseGet must no be null", responseGet)
-    Assert.assertTrue("Response value must be defined.",responseGet.value.isDefined)
-    Assert.assertEquals("Response value must be [value]",responseGet.value.get,value)
+    val putResponseFuture = receptor ? Put(key, value)
+    val putResponse = Await.result(putResponseFuture, this.duration)
+
+    val getResponseFuture = receptor ? Get(key)
+    val getResponse = Await.result(getResponseFuture, this.duration)
+
+
+    Assert.assertNotNull("ResponsePut must no be null", putResponse)
+    Assert.assertNotNull("ResponseGet must no be null", getResponse)
+    Assert.assertThat("Must be a ResponseGet", getResponse, CoreMatchers.instanceOf[Any](classOf[GetResponse]))
+    Assert.assertTrue("Response value must be defined.", getResponse.asInstanceOf[GetResponse].value.isDefined)
+    Assert.assertEquals("Response value must be [value]", getResponse.asInstanceOf[GetResponse].value.get, value)
   }
 
   /**
    * Ask for a key that does not exist.
    */
   @Test
-  def notExistKeyTest():Unit={
+  def notExistKeyTest(): Unit = {
     val key = "notExistKeyTestKey"
-    val Success(responseGet:GetResponse)= (receptor ? Get(key)).value.get
-    Assert.assertNotNull("Response must no be null", responseGet)
-    Assert.assertTrue("Response value must be empty.",responseGet.value.isEmpty)
+    val getResponseFuture = receptor ? Get(key)
+    val getResponse = Await.result(getResponseFuture, this.duration)
+
+    Assert.assertNotNull("ResponseGet must no be null", getResponse)
+    Assert.assertThat("Must be a ResponseGet", getResponse, CoreMatchers.instanceOf[Any](classOf[GetResponse]))
+    Assert.assertTrue("Response value must be empty.", getResponse.asInstanceOf[GetResponse].value.isEmpty)
+  }
+
+  /**
+   * Ask for a key that does not exist.
+   */
+  @Test
+  def createAndInvalidateTest(): Unit = {
+    val key = "createAndInvalidateKey"
+    val value = "createAndInvalidateValue"
+    val putResponseFuture = receptor ? Put(key, value)
+    val putResponse = Await.result(putResponseFuture, this.duration)
+
+    val getResponseFuture = receptor ? Get(key)
+    val getResponse = Await.result(getResponseFuture, this.duration)
+
+    Assert.assertNotNull("ResponsePut must no be null", putResponse)
+    Assert.assertNotNull("ResponseGet must no be null", getResponse)
+    Assert.assertThat("Must be a ResponseGet", getResponse, CoreMatchers.instanceOf[Any](classOf[GetResponse]))
+    Assert.assertTrue("Response value must be defined.", getResponse.asInstanceOf[GetResponse].value.isDefined)
+    Assert.assertEquals("Response value must be [value]", getResponse.asInstanceOf[GetResponse].value.get, value)
+
+    val invalidateFuture = receptor ? Invalidate(key)
+    val invalidateResponse = Await.result(invalidateFuture, this.duration)
+
+    Assert.assertNotNull("Invalidate Response must not be null", invalidateResponse)
+
+    val getResponseFuture2 = receptor ? Get(key)
+    val getResponse2 = Await.result(getResponseFuture2, this.duration)
+    Assert.assertNotNull("ResponseGet must no be null", getResponse2)
+    Assert.assertThat("Must be a ResponseGet", getResponse2, CoreMatchers.instanceOf[Any](classOf[GetResponse]))
+    Assert.assertTrue("Response value must be empty.", getResponse2.asInstanceOf[GetResponse].value.isEmpty)
+
   }
 }

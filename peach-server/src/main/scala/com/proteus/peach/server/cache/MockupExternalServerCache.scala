@@ -20,7 +20,9 @@ import java.util.{HashMap => JHashMap}
 import java.util.{Map => JMap}
 
 import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
+import com.proteus.peach.common.comm.PeachServerMessage.InvalidateResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
+import com.proteus.peach.common.comm.PeachServerMessage.SizeResponse
 
 
 /**
@@ -50,6 +52,9 @@ class MockupExternalServerCache(name: String) extends ExternalServerCache {
    * @return A put response.
    */
   override def put(key: String, value: String): PutResponse = {
+    if (Option(key).isEmpty) {
+      throw new IllegalArgumentException("The key must not be NULL.")
+    }
     this.cache.put(key, value)
     PutResponse()
   }
@@ -73,6 +78,36 @@ class MockupExternalServerCache(name: String) extends ExternalServerCache {
    * Stop signal.
    */
   override def stop(): Unit = {}
+
+  /**
+   * Discards any cached value for key key.
+   *
+   * @param key Searched key.
+   * @return Invalidate response.
+   */
+  override def invalidate(key: String): InvalidateResponse = {
+    this.cache.remove(key)
+    InvalidateResponse()
+  }
+
+  /**
+   * Discards all entries in the cache.
+   *
+   * @return Invalidate response.
+   */
+  override def invalidateAll(): InvalidateResponse = {
+    this.cache.clear()
+    InvalidateResponse()
+  }
+
+  /**
+   * Returns the approximate number of entries in this cache.
+   *
+   * @return The approximate number of entries.
+   */
+  override def size(): SizeResponse = {
+    SizeResponse(this.cache.size())
+  }
 }
 
 

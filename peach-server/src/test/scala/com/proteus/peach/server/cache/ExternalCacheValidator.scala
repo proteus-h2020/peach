@@ -16,6 +16,7 @@
 
 package com.proteus.peach.server.cache
 
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 
@@ -30,6 +31,15 @@ trait ExternalCacheValidator {
   val cacheServer: ExternalServerCache
 
   /**
+   * Remove all the entries in the cache.
+   */
+  @After
+  def invalidateCache(): Unit = {
+    this.cacheServer.invalidateAll()
+    Assert.assertEquals("The size must be 0", 0L, this.cacheServer.size().value)
+  }
+
+  /**
    * Simple test put and get key.
    */
   @Test
@@ -39,18 +49,49 @@ trait ExternalCacheValidator {
     this.cacheServer.put(key, value)
     val response = this.cacheServer.get(key)
     Assert.assertNotNull("Response must no be null", response)
-    Assert.assertTrue("Response value must be defined.",response.value.isDefined)
-    Assert.assertEquals("Response value must be [value]",response.value.get,value)
+    Assert.assertTrue("Response value must be defined.", response.value.isDefined)
+    Assert.assertEquals("Response value must be [value]", response.value.get, value)
+    Assert.assertEquals("The size must be 1", 1L, this.cacheServer.size().value)
   }
 
   /**
    * Ask for a key that does not exist.
    */
   @Test
-  def notExistKeyTest():Unit={
+  def notExistKeyTest(): Unit = {
     val key = "notExistKeyTestKey"
     val response = this.cacheServer.get(key)
     Assert.assertNotNull("Response must no be null", response)
-    Assert.assertTrue("Response value must be empty.",response.value.isEmpty)
+    Assert.assertTrue("Response value must be empty.", response.value.isEmpty)
+  }
+
+  /**
+   * Ask for a key that does not exist.
+   */
+  @Test
+  def createAndInvalidateTest(): Unit = {
+    val key = "createAndInvalidateKey"
+    val value = "createAndInvalidateValue"
+    this.cacheServer.put(key, value)
+    val response1 = this.cacheServer.get(key)
+    Assert.assertNotNull("Response must no be null", response1)
+    Assert.assertTrue("Response value must be defined.", response1.value.isDefined)
+    Assert.assertEquals("Response value must be [value]", response1.value.get, value)
+    Assert.assertEquals("The size must be 1", 1L, this.cacheServer.size().value)
+    this.cacheServer.invalidate(key)
+    val response2 = this.cacheServer.get(key)
+    Assert.assertNotNull("Response must no be null", response2)
+    Assert.assertTrue("Response value must be empty.", response2.value.isEmpty)
+    Assert.assertEquals("The size must be 0", 0L, this.cacheServer.size().value)
+  }
+
+  /**
+   * Ask for a key that does not exist.
+   */
+  @Test(expected = classOf[IllegalArgumentException])
+  def createWithNullKeyTest(): Unit = {
+    val key = None.orNull
+    val value = "createAndInvalidateValue"
+    this.cacheServer.put(key, value)
   }
 }
