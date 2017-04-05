@@ -28,6 +28,7 @@
         <module>peach-server</module>
         <module>peach-client</module>
         <module>peach-common</module>
+        <module>peach-redis-server</module>
     </modules>
     <name>Peach project - Parent</name>
     <url>https://www.proteus-bigdata.com/</url>
