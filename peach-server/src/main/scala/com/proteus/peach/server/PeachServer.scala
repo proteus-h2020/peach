@@ -33,7 +33,8 @@ import scala.concurrent.duration.Duration
  * @param serverCache Instance of the server cache.
  * @param config      Configuration instance.
  */
-class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(), config: PeachServerConfig = PeachServerConfig.DefaultConfig) {
+class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(),
+  config: PeachServerConfig = PeachServerConfig.DefaultConfig) {
 
   /**
    * System actor.

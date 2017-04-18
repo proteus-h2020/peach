@@ -17,50 +17,56 @@
 package com.proteus.peach.redis.manager
 
 import java.util.Arrays
-import java.util.List
+import java.util.{List => JList}
 
-object BasicRedisSession{
+object BasicRedisSession {
 
   /**
    * Redis default port.
    */
-  val RedisDefaultPort : Int = 6379
+  val RedisDefaultPort: Int = 6379
+
+  /**
+   * Create a redis session using the default port.
+   *
+   * @param id        The session identifier.
+   * @param addresses The list of addresses.
+   * @return The BasicRedisSession instance.
+   */
+  def apply(id: String, addresses: JList[String]): BasicRedisSession = {
+    BasicRedisSession(id, addresses, RedisDefaultPort)
+  }
+
+  /**
+   * Create a redis session using the default port.
+   *
+   * @param id   The session identifier.
+   * @param host The target host.
+   * @return The BasicRedisSession instance.
+   */
+  def apply(id: String, host: String): BasicRedisSession = {
+    BasicRedisSession(id, Arrays.asList(host), BasicRedisSession.RedisDefaultPort)
+  }
+
+  /**
+   * Create a redis session using the default port.
+   *
+   * @param id   The session identifier.
+   * @param host The target host.
+   * @param port The target port.
+   * @return The BasicRedisSession instance.
+   */
+  def apply(id: String, host: String, port: Int): BasicRedisSession = {
+    BasicRedisSession(id, Arrays.asList(host), port)
+  }
+
 }
 
 /**
  * Class that contains the information required for establishing a Redis session.
- * @param id The session identifier.
+ *
+ * @param id        The session identifier.
  * @param addresses The list of addresses.
- * @param port The port for incoming Redis clients.
+ * @param port      The port for incoming Redis clients.
  */
-case class BasicRedisSession(id: String, addresses: List[String], port: Int){
-
-  /**
-   * Create a redis session using the default port.
-   * @param id The session identifier.
-   * @param addresses The list of addresses.
-   */
-  def this(id: String, addresses: List[String]) = {
-    this(id, addresses, BasicRedisSession.RedisDefaultPort)
-  }
-
-  /**
-   * Create a redis session using the default port connecting to a single host.
-   * @param id The session identifier.
-   * @param host The target host.
-   */
-  def this(id: String, host: String) = {
-    this(id, Arrays.asList(host), BasicRedisSession.RedisDefaultPort)
-  }
-
-  /**
-   * Create a redis session connecting to a single host.
-   * @param id The session identifier.
-   * @param host The target host.
-   * @param port The target port.
-   */
-  def this(id: String, host: String, port: Int) = {
-    this(id, Arrays.asList(host), port)
-  }
-
-}
+case class BasicRedisSession(id: String, addresses: JList[String], port: Int)
