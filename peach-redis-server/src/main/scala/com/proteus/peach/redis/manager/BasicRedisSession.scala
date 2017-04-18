@@ -16,7 +16,7 @@
 
 package com.proteus.peach.redis.manager
 
-import java.util.Arrays
+import java.util.{Arrays => JArrays}
 import java.util.{List => JList}
 
 object BasicRedisSession {
@@ -26,27 +26,6 @@ object BasicRedisSession {
    */
   val RedisDefaultPort: Int = 6379
 
-  /**
-   * Create a redis session using the default port.
-   *
-   * @param id        The session identifier.
-   * @param addresses The list of addresses.
-   * @return The BasicRedisSession instance.
-   */
-  def apply(id: String, addresses: JList[String]): BasicRedisSession = {
-    BasicRedisSession(id, addresses, RedisDefaultPort)
-  }
-
-  /**
-   * Create a redis session using the default port.
-   *
-   * @param id   The session identifier.
-   * @param host The target host.
-   * @return The BasicRedisSession instance.
-   */
-  def apply(id: String, host: String): BasicRedisSession = {
-    BasicRedisSession(id, Arrays.asList(host), BasicRedisSession.RedisDefaultPort)
-  }
 
   /**
    * Create a redis session using the default port.
@@ -56,8 +35,8 @@ object BasicRedisSession {
    * @param port The target port.
    * @return The BasicRedisSession instance.
    */
-  def apply(id: String, host: String, port: Int): BasicRedisSession = {
-    BasicRedisSession(id, Arrays.asList(host), port)
+  def apply(id: String, host: String, port: Int = BasicRedisSession.RedisDefaultPort): BasicRedisSession = {
+    BasicRedisSession(id, JArrays.asList(host), port)
   }
 
 }
@@ -69,4 +48,4 @@ object BasicRedisSession {
  * @param addresses The list of addresses.
  * @param port      The port for incoming Redis clients.
  */
-case class BasicRedisSession(id: String, addresses: JList[String], port: Int)
+case class BasicRedisSession(id: String, addresses: JList[String], port: Int = BasicRedisSession.RedisDefaultPort)

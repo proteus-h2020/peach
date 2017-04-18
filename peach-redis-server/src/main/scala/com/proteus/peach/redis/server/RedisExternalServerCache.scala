@@ -20,21 +20,46 @@ import com.proteus.peach.common.comm.PeachServerMessage.GetResponse
 import com.proteus.peach.common.comm.PeachServerMessage.InvalidateResponse
 import com.proteus.peach.common.comm.PeachServerMessage.PutResponse
 import com.proteus.peach.common.comm.PeachServerMessage.SizeResponse
+import com.proteus.peach.redis.manager.BasicRedisSession
+import com.proteus.peach.redis.manager.HoconRedisSessionConfig
+import com.proteus.peach.redis.manager.RedisSessionManager
+import com.proteus.peach.redis.server.RedisExternalServerCache.Log
 import com.proteus.peach.server.cache.ExternalServerCache
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-class RedisExternalServerCache extends ExternalServerCache {
+object RedisExternalServerCache {
+
+  /**
+   * Class logger.
+   */
+  private val Log: Logger = LoggerFactory.getLogger(this.getClass.getName)
+}
+
+/**
+ * Redis external cache server.
+ *
+ * @param basicRedisSession Basic redis session.
+ */
+class RedisExternalServerCache(basicRedisSession: BasicRedisSession = HoconRedisSessionConfig.getSession())
+  extends ExternalServerCache {
 
   /**
    * Redis cache provider.
    */
-  var provider: Option[RedisExternalServerProvider] = None
+  lazy val provider: RedisExternalServerProvider = new RedisExternalServerProvider(basicRedisSession.id)
 
   /**
    * Init signal.
    */
   override def init(): Unit = {
-
+    if (RedisSessionManager.init(basicRedisSession)) {
+      Log.info(s"Connected to ${basicRedisSession.id}...")
+    } else {
+      throw new UnknownError("Impossible to connect with REDIS.")
+    }
   }
+
 
   /**
    * Put a element in the cache.
@@ -44,8 +69,7 @@ class RedisExternalServerCache extends ExternalServerCache {
    * @return A put response.
    */
   override def put(key: String, value: String): PutResponse = {
-    this.checkProvider()
-    this.provider.get.put(key, value)
+    this.provider.put(key, value)
     PutResponse()
   }
 
@@ -56,8 +80,7 @@ class RedisExternalServerCache extends ExternalServerCache {
    * @return The value if exist.
    */
   override def get(key: String): GetResponse = {
-    this.checkProvider()
-    val op = this.provider.get.get(key)
+    val op = this.provider.get(key)
     GetResponse(op)
   }
 
@@ -68,18 +91,8 @@ class RedisExternalServerCache extends ExternalServerCache {
    * @return Invalidate response.
    */
   override def invalidate(key: String): InvalidateResponse = {
-    this.checkProvider()
-    this.provider.get.delete(key)
+    this.provider.delete(key)
     InvalidateResponse()
-  }
-
-  /**
-   * Check if the parameter is defined.
-   */
-  private def checkProvider(): Unit = {
-    if (this.provider.isEmpty) {
-      throw new IllegalStateException("The Jedis client is not defined.")
-    }
   }
 
   /**
@@ -88,10 +101,10 @@ class RedisExternalServerCache extends ExternalServerCache {
    * @return Invalidate response.
    */
   override def invalidateAll(): InvalidateResponse = {
-    this.checkProvider()
-    this.provider.get.flush()
+    this.provider.flush()
     InvalidateResponse()
   }
+
 
   /**
    * Returns the approximate number of entries in this cache.
@@ -99,8 +112,7 @@ class RedisExternalServerCache extends ExternalServerCache {
    * @return The approximate number of entries.
    */
   override def size(): SizeResponse = {
-    this.checkProvider()
-    val size = this.provider.get.size()
+    val size = this.provider.size()
     SizeResponse(size.getOrElse(-1L))
   }
 
@@ -108,6 +120,7 @@ class RedisExternalServerCache extends ExternalServerCache {
    * Stop signal.
    */
   override def stop(): Unit = {
-
+    RedisSessionManager.close(basicRedisSession.id)
+    Log.info(s"Disconnected to ${basicRedisSession.id}.")
   }
 }

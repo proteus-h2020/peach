@@ -61,25 +61,7 @@ object RedisSessionManager {
    */
   private val Configurations: JMap[String, BasicRedisSession] = new ConcurrentHashMap[String, BasicRedisSession]()
 
-  /**
-   * Map of the scripts hashes indexed by function name.
-   */
-  private val Scripts: JMap[String, String] = new ConcurrentHashMap[String, String]()
 
-  /**
-   * Initialize a list of sessions.
-   *
-   * @param sessions The sessions.
-   * @return Whether all the sessions have been initialized.
-   */
-  def init(sessions: JList[BasicRedisSession]): Boolean = {
-    val it = sessions.iterator()
-    var result = true
-    while (result && it.hasNext) {
-      result = RedisSessionManager.init(it.next())
-    }
-    result
-  }
 
   /**
    * Initialize a session in redis. This method must be called before using the connection.
@@ -131,19 +113,6 @@ object RedisSessionManager {
     }
   }
 
-  /**
-   * Get the redis session used to identify a session.
-   *
-   * @param sessionId The session identifier.
-   * @return A basic redis session information.
-   */
-  def getConfiguration(sessionId: String): Option[BasicRedisSession] = {
-    if (this.Configurations.containsKey(sessionId)) {
-      Option(this.Configurations.get(sessionId))
-    } else {
-      None
-    }
-  }
 
   /**
    * Method to reconnect.
@@ -165,16 +134,6 @@ object RedisSessionManager {
     }
     None
 
-  }
-
-  /**
-   * Get the SHA hash associated with a given script.
-   *
-   * @param script The name of the script.
-   * @return An option with the hash.
-   */
-  def getScriptSHA(script: String): Option[String] = {
-    Option(this.Scripts.get(script))
   }
 
   /**
