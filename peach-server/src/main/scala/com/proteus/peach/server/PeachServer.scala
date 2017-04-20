@@ -20,10 +20,11 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterReceptionistExtension
-import com.proteus.peach.server.cache.MockupExternalServerCache
 import com.proteus.peach.server.cache.ExternalServerCache
+import com.proteus.peach.server.cache.MockupExternalServerCache
 import com.proteus.peach.server.comm.AkkaPeachServerReceptor
 import com.proteus.peach.server.config.PeachServerConfig
+import com.proteus.peach.server.service.AbstractService
 
 import scala.concurrent.duration.Duration
 
@@ -34,7 +35,7 @@ import scala.concurrent.duration.Duration
  * @param config      Configuration instance.
  */
 class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(),
-  config: PeachServerConfig = PeachServerConfig.DefaultConfig) {
+  config: PeachServerConfig = PeachServerConfig.DefaultConfig) extends AbstractService {
 
   /**
    * System actor.
@@ -44,16 +45,24 @@ class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCac
   /**
    * Init method.
    */
-  def init(): Unit = {
-    val comm = system.actorOf(AkkaPeachServerReceptor.props(serverCache), "comm")
-    ClusterReceptionistExtension(system).registerService(comm)
-    Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
+  def doInit(): Unit = {
+    this.serverCache.init()
   }
 
   /**
-   * Stop method.
+   * Shutdown method implementation.
    */
-  def stop(): Unit = {
+  override def shutdown(): Unit = {
+    this.serverCache.stop()
     system.shutdown()
+  }
+
+  /**
+   * Method that is called when the run method is called on the service.
+   */
+  override protected def doRun(): Unit = {
+    val comm = system.actorOf(AkkaPeachServerReceptor.props(serverCache), "comm")
+    ClusterReceptionistExtension(system).registerService(comm)
+    Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
   }
 }

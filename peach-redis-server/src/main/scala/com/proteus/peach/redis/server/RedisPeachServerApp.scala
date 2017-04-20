@@ -14,43 +14,36 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.client
-
-import java.util.concurrent.TimeUnit
+package com.proteus.peach.redis.server
 
 import com.proteus.peach.server.PeachServer
-import org.junit.AfterClass
-import org.junit.BeforeClass
+import com.proteus.peach.server.cache.ExternalServerCache
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-import scala.concurrent.duration.Duration
+/**
+ * Redis peach server application.
+ */
+object RedisPeachServerApp extends App {
 
-object PeachAkkaClientTest {
+  /**
+   * Logger instance.
+   */
+  lazy val Log: Logger = LoggerFactory.getLogger("RedisPeachServerApp")
+
+  /**
+   * RedisExternal cache.
+   */
+  lazy val externalServerCache: ExternalServerCache = new RedisExternalServerCache()
+
   /**
    * Server instance.
    */
-  lazy val Server: PeachServer = new PeachServer()
+  lazy val server: PeachServer = new PeachServer(externalServerCache)
 
-  /**
-   * Init cache server.
-   */
-  @BeforeClass
-  def beforeAll(): Unit = {
-    Server.init()
-    Server.run()
-  }
-
-  /**
-   * Stop cache server.
-   */
-  @AfterClass
-  def afterAll(): Unit = {
-    Server.shutdown()
-  }
-}
-
-class PeachAkkaClientTest extends PeachClientValidator {
-  /**
-   * Client cache to test.
-   */
-  override lazy val clientCache: PeachClient = PeachAkkaClient()
+  Log.info("Initializing Redis Server...")
+  server.init()
+  Log.info("Running Redis Server...")
+  server.run()
+  Log.info("Waiting requests.")
 }
