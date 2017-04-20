@@ -55,6 +55,9 @@ object AbstractRedisHelper{
     new RedisHelper(AbstractRedisHelper.getRedisHost(), AbstractRedisHelper.getRedisPort())
   }
 
+  /**
+   * Before the test connect to redis.
+   */
   @BeforeClass
   def beforeRedisIT(): Unit = {
     this.redisHelper.connect()
@@ -62,6 +65,9 @@ object AbstractRedisHelper{
     this.redisHelper.flushAll()
   }
 
+  /**
+   * After all tests shutdown the helper.
+   */
   @AfterClass
   def afterRedisIT(): Unit = {
     this.redisHelper.close()
