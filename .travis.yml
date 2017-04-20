@@ -4,7 +4,7 @@ jdk:
   - oraclejdk8
 
 script:
-  - mvn clean test scoverage:report
+  - mvn clean test scoverage:integration-report
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
