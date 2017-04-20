@@ -69,7 +69,7 @@ class RedisExternalServerCache(basicRedisSession: BasicRedisSession = HoconRedis
    * @return A put response.
    */
   override def put(key: String, value: String): PutResponse = {
-    if(Option(key).isEmpty){
+    if (Option(key).isEmpty) {
       throw new IllegalArgumentException("The key is null.")
     }
     this.provider.put(key, value)
