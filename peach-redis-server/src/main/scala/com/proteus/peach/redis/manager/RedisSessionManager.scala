@@ -172,4 +172,17 @@ object RedisSessionManager {
     }
   }
 
+  /**
+   * Get the redis session used to identify a session.
+   *
+   * @param sessionId The session identifier.
+   * @return A basic redis session information.
+   */
+  def getConfiguration(sessionId: String): Option[BasicRedisSession] = {
+    if (this.Configurations.containsKey(sessionId)) {
+      Option(this.Configurations.get(sessionId))
+    } else {
+      None
+    }
+  }
 }

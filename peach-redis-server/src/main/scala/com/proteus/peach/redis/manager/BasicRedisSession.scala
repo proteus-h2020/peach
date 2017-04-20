@@ -35,7 +35,7 @@ object BasicRedisSession {
    * @param port The target port.
    * @return The BasicRedisSession instance.
    */
-  def apply(id: String, host: String, port: Int = BasicRedisSession.RedisDefaultPort): BasicRedisSession = {
+  def apply(id: String, host: String, port: Int): BasicRedisSession = {
     BasicRedisSession(id, JArrays.asList(host), port)
   }
 

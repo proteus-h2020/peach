@@ -16,7 +16,7 @@
 
 package com.proteus.peach.redis.server
 
-import com.proteus.peach.redis.manager.AbstractRedisManagerIT
+import com.proteus.peach.redis.manager.AbstractRedisManagerHelper
 import com.proteus.peach.server.cache.ExternalCacheValidator
 import com.proteus.peach.server.cache.ExternalServerCache
 import org.junit.AfterClass
@@ -26,7 +26,7 @@ object RedisExternalServerCacheIT {
   /**
    * Cache server.
    */
-  lazy val CacheServer: ExternalServerCache = new RedisExternalServerCache(AbstractRedisManagerIT.Session)
+  lazy val CacheServer: ExternalServerCache = new RedisExternalServerCache(AbstractRedisManagerHelper.Session)
 
   /**
    * Init cache server.
@@ -45,7 +45,7 @@ object RedisExternalServerCacheIT {
   }
 }
 
-class RedisExternalServerCacheIT extends AbstractRedisManagerIT with ExternalCacheValidator {
+class RedisExternalServerCacheIT extends AbstractRedisManagerHelper with ExternalCacheValidator {
   /**
    * Cache server instance.
    */

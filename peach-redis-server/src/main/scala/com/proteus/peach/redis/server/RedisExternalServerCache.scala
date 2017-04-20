@@ -69,6 +69,9 @@ class RedisExternalServerCache(basicRedisSession: BasicRedisSession = HoconRedis
    * @return A put response.
    */
   override def put(key: String, value: String): PutResponse = {
+    if(Option(key).isEmpty){
+      throw new IllegalArgumentException("The key is null.")
+    }
     this.provider.put(key, value)
     PutResponse()
   }
@@ -121,6 +124,7 @@ class RedisExternalServerCache(basicRedisSession: BasicRedisSession = HoconRedis
    */
   override def stop(): Unit = {
     RedisSessionManager.close(basicRedisSession.id)
+    RedisSessionManager.shutdown()
     Log.info(s"Disconnected to ${basicRedisSession.id}.")
   }
 }

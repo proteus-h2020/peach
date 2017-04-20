@@ -24,7 +24,7 @@ import org.junit.BeforeClass
  * Abstract class to run Redis integration tests. Redis must be launched before starting the
  * tests.
  */
-object AbstractRedisIT{
+object AbstractRedisHelper{
 
   /**
    * Redis helper.
@@ -52,7 +52,7 @@ object AbstractRedisIT{
    * Init the connection with redis taking into account the environment variables.
    */
   private def initHelper() : RedisHelper = {
-    new RedisHelper(AbstractRedisIT.getRedisHost(), AbstractRedisIT.getRedisPort())
+    new RedisHelper(AbstractRedisHelper.getRedisHost(), AbstractRedisHelper.getRedisPort())
   }
 
   @BeforeClass
@@ -68,7 +68,7 @@ object AbstractRedisIT{
   }
 }
 
-abstract class AbstractRedisIT {
+abstract class AbstractRedisHelper {
 
   /**
    * Assert that a key in a hashmap matches the expected value.
@@ -77,7 +77,7 @@ abstract class AbstractRedisIT {
    * @param value The expected value.
    */
   def assertKeyEquals(map: String, key: String, value: String) : Unit = {
-    AbstractRedisIT.redisHelper.assertKeyEquals(map, key, value)
+    AbstractRedisHelper.redisHelper.assertKeyEquals(map, key, value)
   }
 
   /**
@@ -85,6 +85,6 @@ abstract class AbstractRedisIT {
    * @param keys The keys.
    */
   def removeKeys(keys: String*) : Unit = {
-    AbstractRedisIT.redisHelper.removeKeys(keys)
+    AbstractRedisHelper.redisHelper.removeKeys(keys)
   }
 }

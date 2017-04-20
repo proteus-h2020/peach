@@ -22,7 +22,7 @@ import org.junit.BeforeClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-object AbstractRedisManagerIT{
+object AbstractRedisManagerHelper{
   /**
    * Target session
    */
@@ -33,8 +33,8 @@ object AbstractRedisManagerIT{
    */
   val Session : BasicRedisSession = BasicRedisSession(
     this.TargetSession,
-    AbstractRedisIT.getRedisHost(),
-    AbstractRedisIT.getRedisPort()
+    AbstractRedisHelper.getRedisHost(),
+    AbstractRedisHelper.getRedisPort()
   )
 
   /**
@@ -42,28 +42,11 @@ object AbstractRedisManagerIT{
    */
   private val Log: Logger = LoggerFactory.getLogger(this.getClass.getName)
 
-  /**
-   * Initialize the Redis session.
-   */
-  @BeforeClass
-  def beforeClassIT() : Unit = {
-    Log.info("Starting Redis Session Manager.")
-    RedisSessionManager.init(this.Session)
-    assertTrue("Default session must be defined",
-      RedisSessionManager.getSession(this.TargetSession).isDefined)
-  }
 
-  /**
-   * Finish Redis Session Manager.
-   */
-  @AfterClass
-  def afterClassIT() : Unit = {
-    Log.info("Stopping Redis Session Manager.")
-    RedisSessionManager.close(this.TargetSession)
-  }
+
 }
 
 /**
  * Abstract class to be inherited in all Redis integration tests.
  */
-abstract class AbstractRedisManagerIT extends AbstractRedisIT
+abstract class AbstractRedisManagerHelper extends AbstractRedisHelper

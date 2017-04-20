@@ -26,6 +26,9 @@ object AbstractRedisProvider {
    */
   val DefaultMaxNumRetries = 5
 
+  /**
+   * Default sleeping time.
+   */
   val DefaultSleepingTime = 5000
 }
 
@@ -66,9 +69,10 @@ abstract class AbstractRedisProvider(sessionId: String) {
 
     var toReturn: Option[T] = None
     var numRetries = 0
-    while (numRetries < maxNumRetries && toReturn.isEmpty) {
+    while (numRetries < maxNumRetries) {
       try {
-        toReturn = Some(func())
+        toReturn = Option(func())
+        numRetries=maxNumRetries
       } catch {
         case error: Exception => {
           Log.error("Error executind the Redis command count: " + error.toString)
