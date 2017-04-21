@@ -24,36 +24,12 @@ import org.junit.BeforeClass
  * Abstract class to run Redis integration tests. Redis must be launched before starting the
  * tests.
  */
-object AbstractRedisHelper{
+object AbstractRedisHelper {
 
   /**
    * Redis helper.
    */
-  val redisHelper : RedisHelper = this.initHelper()
-
-  /**
-   * Get the redis target host.
-   * @return The host specified in REDIS_HOST or the default host.
-   */
-  def getRedisHost() : String = {
-    sys.env.getOrElse(RedisHelper.HostEnvironmentVariable, RedisHelper.DefaultHost)
-  }
-
-  /**
-   * Get the redis target port.
-   * @return The port specified in REDIS_PORT or the default port.
-   */
-  def getRedisPort() : Int = {
-    sys.env.getOrElse(RedisHelper.PortEnvironmentVariable,
-      s"${RedisHelper.DefaultPort}").toInt
-  }
-
-  /**
-   * Init the connection with redis taking into account the environment variables.
-   */
-  private def initHelper() : RedisHelper = {
-    new RedisHelper(AbstractRedisHelper.getRedisHost(), AbstractRedisHelper.getRedisPort())
-  }
+  val redisHelper: RedisHelper = this.initHelper()
 
   /**
    * Before the test connect to redis.
@@ -72,25 +48,35 @@ object AbstractRedisHelper{
   def afterRedisIT(): Unit = {
     this.redisHelper.close()
   }
-}
-
-abstract class AbstractRedisHelper {
 
   /**
-   * Assert that a key in a hashmap matches the expected value.
-   * @param map The name of the map.
-   * @param key The key in the map.
-   * @param value The expected value.
+   * Init the connection with redis taking into account the environment variables.
    */
-  def assertKeyEquals(map: String, key: String, value: String) : Unit = {
-    AbstractRedisHelper.redisHelper.assertKeyEquals(map, key, value)
+  private def initHelper(): RedisHelper = {
+    new RedisHelper(AbstractRedisHelper.getRedisHost(), AbstractRedisHelper.getRedisPort())
   }
 
   /**
-   * Remove a list of keys from redis.
-   * @param keys The keys.
+   * Get the redis target host.
+   *
+   * @return The host specified in REDIS_HOST or the default host.
    */
-  def removeKeys(keys: String*) : Unit = {
-    AbstractRedisHelper.redisHelper.removeKeys(keys)
+  def getRedisHost(): String = {
+    sys.env.getOrElse(RedisHelper.HostEnvironmentVariable, RedisHelper.DefaultHost)
+  }
+
+  /**
+   * Get the redis target port.
+   *
+   * @return The port specified in REDIS_PORT or the default port.
+   */
+  def getRedisPort(): Int = {
+    sys.env.getOrElse(RedisHelper.PortEnvironmentVariable,
+      s"${RedisHelper.DefaultPort}").toInt
   }
 }
+
+/**
+ * Helper to create Redis tests.
+ */
+abstract class AbstractRedisHelper

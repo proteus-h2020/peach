@@ -28,7 +28,7 @@ object RedisReconnectIT {
    * Initialize the Redis session.
    */
   @BeforeClass
-  def beforeClassIT() : Unit = {
+  def beforeClassIT(): Unit = {
     RedisSessionManager.init(AbstractRedisManagerHelper.Session)
     assertTrue("Default session must be defined",
       RedisSessionManager.getSession(AbstractRedisManagerHelper.TargetSession).isDefined)
@@ -38,7 +38,7 @@ object RedisReconnectIT {
    * Finish Redis Session Manager.
    */
   @AfterClass
-  def afterClassIT() : Unit = {
+  def afterClassIT(): Unit = {
     RedisSessionManager.close(AbstractRedisManagerHelper.TargetSession)
   }
 }
@@ -63,10 +63,10 @@ class RedisReconnectIT extends AbstractRedisManagerHelper {
    */
   @Test
   def reconnectionWorkTest(): Unit = {
-    val fails=3
-    val reconnection=5
-    val result = this.provider.forceReconnect(fails,reconnection)
-    Assert.assertTrue("Result must be defined.",result.isDefined)
+    val fails = 3
+    val reconnection = 5
+    val result = this.provider.forceReconnect(fails, reconnection)
+    Assert.assertTrue("Result must be defined.", result.isDefined)
   }
 
   /**
@@ -74,12 +74,11 @@ class RedisReconnectIT extends AbstractRedisManagerHelper {
    */
   @Test
   def reconnectionFailTest(): Unit = {
-    val fails=3
-    val reconnection=2
-    val result = this.provider.forceReconnect(fails,reconnection)
-    Assert.assertTrue("Result must be empty.",result.isEmpty)
+    val fails = 3
+    val reconnection = 2
+    val result = this.provider.forceReconnect(fails, reconnection)
+    Assert.assertTrue("Result must be empty.", result.isEmpty)
   }
-
 
 
   /**
@@ -100,7 +99,8 @@ class RedisReconnectIT extends AbstractRedisManagerHelper {
           i += 1
           throw new JedisConnectionException("Connection problem.")
         } else {
-          this.client.get.dbSize()
+          val jedis = this.client.getOrElse(throw new IllegalArgumentException("Client is null."))
+          jedis.dbSize()
         }
       }, maxNumTimes, testSleepingTime)
     }

@@ -17,6 +17,7 @@
 package com.proteus.peach.redis.server
 
 import com.proteus.peach.redis.manager.AbstractRedisProvider
+import redis.clients.jedis.Jedis
 
 /**
  * Provider to handle the redis cache.
@@ -24,17 +25,28 @@ import com.proteus.peach.redis.manager.AbstractRedisProvider
  * @param sessionId The session identifier.
  */
 class RedisExternalServerProvider(sessionId: String) extends AbstractRedisProvider(sessionId) {
+
+
+  /**
+   * Check if the parameter is defined.
+   */
+  private def checkClient(): Jedis = {
+    this.client match {
+      case Some(instance) => instance
+      case None => throw new IllegalStateException("The Jedis client is not defined.")
+    }
+  }
+
   /**
    * Put a key/value pair into Redis.
    *
    * @param key   Key parameter.
    * @param value The value.
    */
-  def put(key: String,
-    value: String): Unit = {
-    this.checkClient()
+  def put(key: String, value: String): Unit = {
+    val jedis = this.checkClient()
     this.executeOperationWithRetries(() => {
-      this.client.get.set(key, value)
+      jedis.set(key, value)
     })
   }
 
@@ -45,9 +57,9 @@ class RedisExternalServerProvider(sessionId: String) extends AbstractRedisProvid
    * @return The value.
    */
   def get(key: String): Option[String] = {
-    this.checkClient()
+    val jedis = this.checkClient()
     this.executeOperationWithRetries(() => {
-      this.client.get.get(key)
+      jedis.get(key)
     })
   }
 
@@ -57,28 +69,19 @@ class RedisExternalServerProvider(sessionId: String) extends AbstractRedisProvid
    * @param key Key parameter.
    */
   def delete(key: String): Unit = {
-    this.checkClient()
+    val jedis = this.checkClient()
     this.executeOperationWithRetries(() => {
-      this.client.get.del(key)
+      jedis.del(key)
     })
-  }
-
-  /**
-   * Check if the parameter is defined.
-   */
-  private def checkClient(): Unit = {
-    if (this.client.isEmpty) {
-      throw new IllegalStateException("The Jedis client is not defined.")
-    }
   }
 
   /**
    * Flush all the key in Redis.
    */
   def flush(): Unit = {
-    this.checkClient()
+    val jedis = this.checkClient()
     this.executeOperationWithRetries(() => {
-      this.client.get.flushDB()
+      jedis.flushDB()
     })
   }
 
@@ -88,9 +91,9 @@ class RedisExternalServerProvider(sessionId: String) extends AbstractRedisProvid
    * @return Number of keys.
    */
   def size(): Option[Long] = {
-    this.checkClient()
+    val jedis = this.checkClient()
     this.executeOperationWithRetries(() => {
-      this.client.get.dbSize()
+      jedis.dbSize()
     })
   }
 

@@ -16,9 +16,15 @@
 
 package com.proteus.peach.redis.manager
 
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import redis.clients.jedis.Jedis
+import redis.clients.jedis.exceptions.JedisException
+
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 object AbstractRedisProvider {
   /**
@@ -70,17 +76,20 @@ abstract class AbstractRedisProvider(sessionId: String) {
     var toReturn: Option[T] = None
     var numRetries = 0
     while (numRetries < maxNumRetries) {
-      try {
-        toReturn = Option(func())
-        numRetries=maxNumRetries
-      } catch {
-        case error: Exception => {
+      Try {
+        Option(func())
+      } match {
+        case Failure(error:JedisException) => {
           Log.error("Error executind the Redis command count: " + error.toString)
           numRetries += 1
           Log.error(s"Retry ${numRetries} after ${sleepingTime}")
           setUnfixed()
           Thread.sleep(sleepingTime)
           reconnect()
+        }
+        case Success(result) => {
+          toReturn = result
+          numRetries = maxNumRetries
         }
       }
     }

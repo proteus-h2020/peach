@@ -16,44 +16,47 @@
 
 package com.proteus.peach.redis.manager
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
-import redis.clients.jedis.exceptions.JedisConnectionException
+import redis.clients.jedis.exceptions.JedisException
+
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 object RedisHelper {
 
   /**
    * Environment variable to set the Redis host.
    */
-  val HostEnvironmentVariable : String = "REDIS_HOST"
+  val HostEnvironmentVariable: String = "REDIS_HOST"
 
   /**
    * Environment variable to set the Redis port.
    */
-  val PortEnvironmentVariable : String = "REDIS_PORT"
+  val PortEnvironmentVariable: String = "REDIS_PORT"
 
   /**
    * Default Redis port.
    */
-  val DefaultPort : Int = 6379
+  val DefaultPort: Int = 6379
 
   /**
    * Default host.
    */
-  val DefaultHost : String = "localhost"
+  val DefaultHost: String = "localhost"
 }
 
 /**
  * Class that offers helper methods to write Redis related tests.
+ *
  * @param host The host.
  * @param port The port.
  */
-class RedisHelper(host: String = RedisHelper.DefaultHost, port : Int = RedisHelper.DefaultPort) {
+class RedisHelper(host: String = RedisHelper.DefaultHost, port: Int = RedisHelper.DefaultPort) {
 
   /**
    * Class logger.
@@ -63,12 +66,12 @@ class RedisHelper(host: String = RedisHelper.DefaultHost, port : Int = RedisHelp
   /**
    * The connection pool.
    */
-  private var connectionPool : Option[JedisPool] = None
+  private var connectionPool: Option[JedisPool] = None
 
   /**
    * The Redis client.
    */
-  private var client : Option[Jedis] = None
+  private var client: Option[Jedis] = None
 
   /**
    * Creates an internal connection pool with Redis, and initializes the client that will be
@@ -79,101 +82,52 @@ class RedisHelper(host: String = RedisHelper.DefaultHost, port : Int = RedisHelp
    *   ...
    *   helper.close()
    * }}}
+   *
    * @return Whether it is possible to connect with Redis.
    */
-  def connect() : Boolean = {
+  def connect(): Boolean = {
     val poolConfig = new JedisPoolConfig()
     this.connectionPool = Some(new JedisPool(poolConfig, this.host, this.port))
-    try {
+    Try {
       this.client = Option(this.connectionPool.get.getResource)
-      this.isAlive()
-    }catch {
-      case e: JedisConnectionException => {
-        Log.error(s"Cannot connect to redis ${this.host}:${this.port}", e)
+    } match {
+      case Success(_) => {
+        this.isAlive()
+      }
+      case Failure(error: JedisException) => {
+        Log.error(s"Cannot connect to redis ${this.host}:${this.port}", error)
         false
       }
     }
   }
 
   /**
-   * Close the connection with Redis.
+   * Check whether Redis is alive.
+   *
+   * @return Whether is alive or not.
    */
-  def close() : Unit = {
-    if(this.client.isDefined){
-      this.client.get.close()
-    }
-    if(this.connectionPool.isDefined){
-      this.connectionPool.get.destroy()
+  def isAlive(): Boolean = {
+    this.client match {
+      case Some(instance) => instance.isConnected
+      case None => false
     }
   }
 
   /**
-   * Check whether Redis is alive.
-   * @return Whether is alive or not.
+   * Close the connection with Redis.
    */
-  def isAlive() : Boolean = {
-    if(this.client.isDefined){
-      this.client.get.isConnected
-    }else{
-      false
-    }
+  def close(): Unit = {
+    this.client.foreach(_.close())
+
+    this.connectionPool.foreach(_.destroy())
+
   }
 
   /**
    * Clean all databases in Redis.
    */
-  def flushAll() : Unit = {
-    this.client.get.flushAll()
-  }
-
-  /**
-   * Set a key-value entry.
-   * @param key The key.
-   * @param value The value.
-   */
-  def set(key: String, value: String) : Unit = {
-    this.client.get.set(key, value)
-  }
-
-  /**
-   * Get the value associated with a key.
-   * @param key The key.
-   * @return An option with the value.
-   */
-  def get(key: String) : Option[String] = {
-    Option(this.client.get.get(key))
-  }
-
-  /**
-   * Get a value from a hash map.
-   * @param map The name of the map.
-   * @param key The key.
-   * @return An option with the value.
-   */
-  def hget(map: String, key: String) : Option[String] = {
-    Option(this.client.get.hget(map, key))
-  }
-
-  /**
-   * Assert that a key in a hashmap matches the expected value.
-   * @param map The name of the map.
-   * @param key The key in the map.
-   * @param value The expected value.
-   */
-  def assertKeyEquals(map: String, key: String, value: String) : Unit = {
-    val retrieved = this.hget(map, key)
-    assertTrue("Map does not exists", retrieved.isDefined)
-    assertEquals("Value does not match", value, retrieved.get)
-  }
-
-  /**
-   * Remove a list of keys from redis.
-   * @param keys The keys.
-   */
-  def removeKeys(keys: Seq[String]) : Unit = {
-    keys.foreach(key => {
-      this.client.get.del(key)
-    })
+  def flushAll(): Unit = {
+    this.client.foreach(_.flushAll())
   }
 
 }
