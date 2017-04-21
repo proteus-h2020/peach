@@ -79,7 +79,7 @@ abstract class AbstractRedisProvider(sessionId: String) {
       Try {
         Option(func())
       } match {
-        case Failure(error:JedisException) => {
+        case Failure(error) => {
           Log.error("Error executind the Redis command count: " + error.toString)
           numRetries += 1
           Log.error(s"Retry ${numRetries} after ${sleepingTime}")

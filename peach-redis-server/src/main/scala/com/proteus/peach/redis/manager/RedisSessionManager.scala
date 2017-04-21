@@ -112,7 +112,7 @@ object RedisSessionManager {
           None
         }
       }
-      case Failure(error: JedisConnectionException )=> {
+      case Failure(error)=> {
         Log.error(s"Cannot connect to redis ${redisSession}", error)
         None
       }

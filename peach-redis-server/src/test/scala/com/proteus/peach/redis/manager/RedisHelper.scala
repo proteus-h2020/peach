@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
-import redis.clients.jedis.exceptions.JedisException
 
 import scala.util.Failure
 import scala.util.Success
@@ -94,7 +93,7 @@ class RedisHelper(host: String = RedisHelper.DefaultHost, port: Int = RedisHelpe
       case Success(_) => {
         this.isAlive()
       }
-      case Failure(error: JedisException) => {
+      case Failure(error) => {
         Log.error(s"Cannot connect to redis ${this.host}:${this.port}", error)
         false
       }
