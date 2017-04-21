@@ -28,6 +28,8 @@
         <module>peach-server</module>
         <module>peach-client</module>
         <module>peach-common</module>
+        <module>peach-redis-server</module>
+        <module>peach-redis-server-dist</module>
     </modules>
     <name>Peach project - Parent</name>
     <url>https://www.proteus-bigdata.com/</url>
@@ -176,6 +178,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+
                 </configuration>
                 <executions>
                     <execution>
@@ -248,9 +251,9 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>check</goal> <!-- or integration-check -->
+                            <goal>integration-check</goal> <!-- or integration-check -->
                         </goals>
-                        <phase>prepare-package</phase> <!-- or any other phase -->
+                        <phase>verify</phase> <!-- or any other phase -->
                     </execution>
                 </executions>
             </plugin>

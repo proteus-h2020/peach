@@ -14,42 +14,28 @@
  * limitations under the License.
  */
 
-package com.proteus.peach.client
+package com.proteus.peach.redis.server
 
-import java.util.concurrent.TimeUnit
-
-import com.proteus.peach.server.PeachServer
-import org.junit.AfterClass
+import com.proteus.peach.client.PeachAkkaClient
+import com.proteus.peach.client.PeachClient
+import com.proteus.peach.client.PeachClientValidator
 import org.junit.BeforeClass
 
-import scala.concurrent.duration.Duration
-
-object PeachAkkaClientTest {
+object RedisPeachServerAppIT {
   /**
-   * Server instance.
-   */
-  lazy val Server: PeachServer = new PeachServer()
-
-  /**
-   * Init cache server.
+   * Init Server.
    */
   @BeforeClass
   def beforeAll(): Unit = {
-    Server.init()
+    RedisPeachServerApp.main(Array())
   }
 
-  /**
-   * Stop cache server.
-   */
-  @AfterClass
-  def afterAll(): Unit = {
-    Server.stop()
-  }
+
 }
 
-class PeachAkkaClientTest extends PeachClientValidator {
+class RedisPeachServerAppIT extends PeachClientValidator {
   /**
    * Client cache to test.
    */
-  override lazy val clientCache: PeachClient = PeachAkkaClient()
+  override val clientCache: PeachClient = PeachAkkaClient()
 }

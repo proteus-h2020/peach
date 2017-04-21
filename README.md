@@ -31,6 +31,43 @@ Proteus scope. The cache aims to provide low latency responses on a distributed 
 capabilities. As a generic design, the cache could be integrated within [Apache Flink](https://flink.apache.org/) to 
 speedup computing processes.
 
+## Using Peach
+
+Compile the project to obtain the executable scripts:
+
+```
+$ mvn install -DskipTests
+```
+
+Move to the target directory to launch the PeachServer:
+
+```
+$ cd peach-redis-server-dist/target/peach-redis-server-dist-*/
+```
+
+Launch Peach with the Redis backend. Notice that Redis must be up and
+running:
+
+```
+$ ./bin/peach-redis-server-app
+```
+
+### Launching redis in a test environment
+
+Download [Redis](https://redis.io/download) and compile the project:
+
+```
+$ wget http://download.redis.io/releases/redis-<your_version>.tar.gz
+$ tar xzf redis-<your_version>.tar.gz
+$ cd redis-<your_version>
+$ make
+```
+
+Once the project is successfully built, launch the server:
+
+```
+$ ./src/redis-server
+```
 
 # What is PROTEUS
 PROTEUS is an EU H2020 funded research project to evolve massive online machine learning strategies for predictive 

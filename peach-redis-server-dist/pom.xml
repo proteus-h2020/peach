@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 The Proteus Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>peach-parent</artifactId>
+        <groupId>com.proteus.peach</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>peach-redis-sever-dist</artifactId>
+    <name>Peach project - Redis Server Distribution</name>
+    <url>https://www.proteus-bigdata.com/</url>
+
+    <developers>
+        <developer>
+            <id>aagea</id>
+            <name>Alvaro Agea</name>
+            <email>alvaro@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>dhiguero</id>
+            <name>Daniel Higuero</name>
+            <email>daniel@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>jtirado</id>
+            <name>Juan Manuel Tirado</name>
+            <email>juan@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-redis-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <!-- Make scala style possible... -->
+        <base.path>${basedir}/..</base.path>
+    </properties>
+
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <configurationSourceDirectory>${project.basedir}/src/main/assembly/conf
+                    </configurationSourceDirectory>
+                    <configurationDirectory>conf</configurationDirectory>
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+                    <includeConfigurationDirectoryInClasspath>true
+                    </includeConfigurationDirectoryInClasspath>
+                    <assembleDirectory>
+                        ${project.build.directory}/peach-redis-server-dist-${project.parent.version}
+                    </assembleDirectory>
+                    <extraJvmArguments>-Xms512m</extraJvmArguments>
+                    <repositoryLayout>flat</repositoryLayout>
+                    <generateRepository>true</generateRepository>
+                    <repositoryName>lib</repositoryName>
+                    <platforms>
+                        <platform>unix</platform>
+                    </platforms>
+
+                </configuration>
+                <executions>
+
+                    <execution>
+                        <id>Assembler-App-PeachRedisServer</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <unixScriptTemplate>
+                                ${project.basedir}/src/main/assembly/templates/linux-script.sh
+                            </unixScriptTemplate>
+                            <programs>
+                                <program>
+                                    <mainClass>com.proteus.peach.redis.server.RedisPeachServerApp</mainClass>
+                                    <id>peach-redis-server-app</id>
+                                    <platforms>
+                                        <platform>unix</platform>
+                                    </platforms>
+                                    <jvmSettings>
+                                        <systemProperties>
+                                            <systemProperty>log4j.configuration=log4j.properties
+                                            </systemProperty>
+                                        </systemProperties>
+                                    </jvmSettings>
+                                </program>
+                            </programs>
+                        </configuration>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+
+
+
+                    <execution>
+                        <id>Assembler-Daemon-PeachRedisServer</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <unixScriptTemplate>
+                                ${project.basedir}/src/main/assembly/templates/linux-daemon.sh
+                            </unixScriptTemplate>
+                            <programs>
+                                <program>
+                                    <mainClass>com.proteus.peach.redis.server.RedisPeachServerApp</mainClass>
+                                    <id>peach-redis-server-daemon</id>
+                                    <platforms>
+                                        <platform>unix</platform>
+                                    </platforms>
+                                    <jvmSettings>
+                                        <systemProperties>
+                                            <systemProperty>log4j.configuration=log4j.properties
+                                            </systemProperty>
+                                            <systemPropery>com.sun.management.jmxremote
+                                            </systemPropery>
+                                            <systemProperty>com.sun.management.jmxremote.authenticate=false
+                                            </systemProperty>
+                                            <systemProperty>com.sun.management.jmxremote.port=9019
+                                            </systemProperty>
+                                            <systemProperty>com.sun.management.jmxremote.ssl=false
+                                            </systemProperty>
+                                        </systemProperties>
+                                    </jvmSettings>
+                                </program>
+                            </programs>
+                        </configuration>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/peach-redis-server-dist-${project.parent.version}
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/assembly/include
+                                    </directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <finalName>peach-redis-server-dist-${project.parent.version}</finalName>
+                    <descriptor>src/main/assembly/package.xml</descriptor>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>

@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <artifactId>peach-parent</artifactId>
+        <groupId>com.proteus.peach</groupId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>peach-redis-server</artifactId>
+    <name>Peach project - Redis Server</name>
+    <url>https://www.proteus-bigdata.com/</url>
+
+    <developers>
+        <developer>
+            <id>aagea</id>
+            <name>Alvaro Agea</name>
+            <email>alvaro@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>dhiguero</id>
+            <name>Daniel Higuero</name>
+            <email>daniel@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+        <developer>
+            <id>jtirado</id>
+            <name>Juan Manuel Tirado</name>
+            <email>juan@novelti.io</email>
+            <organization>Novelti</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <jedis.version>2.9.0</jedis.version>
+
+        <!-- Make scala style possible... -->
+        <base.path>${basedir}/..</base.path>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-server</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-server</artifactId>
+            <version>${project.parent.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-client</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>peach-client</artifactId>
+            <version>${project.parent.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -50,6 +50,7 @@ object PeachServerTest {
   @BeforeClass
   def beforeAll(): Unit = {
     Server.init()
+    Server.run()
   }
 
   /**
@@ -57,7 +58,7 @@ object PeachServerTest {
    */
   @AfterClass
   def afterAll(): Unit = {
-    Server.stop()
+    Server.shutdown()
   }
 }
 

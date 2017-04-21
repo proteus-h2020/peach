@@ -20,12 +20,26 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.ActorSystem
 import akka.contrib.pattern.ClusterReceptionistExtension
-import com.proteus.peach.server.cache.MockupExternalServerCache
+import com.proteus.peach.server.PeachServer.Log
 import com.proteus.peach.server.cache.ExternalServerCache
+import com.proteus.peach.server.cache.MockupExternalServerCache
 import com.proteus.peach.server.comm.AkkaPeachServerReceptor
 import com.proteus.peach.server.config.PeachServerConfig
+import com.proteus.peach.server.service.AbstractService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration.Duration
+
+/**
+ * Peach Server companion object.
+ */
+object PeachServer {
+  /**
+   * Logger instance.
+   */
+  val Log: Logger = LoggerFactory.getLogger("PeachServer")
+}
 
 /**
  * Server cache launcher.
@@ -33,7 +47,8 @@ import scala.concurrent.duration.Duration
  * @param serverCache Instance of the server cache.
  * @param config      Configuration instance.
  */
-class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(), config: PeachServerConfig = PeachServerConfig.DefaultConfig) {
+class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCache(),
+  config: PeachServerConfig = PeachServerConfig.DefaultConfig) extends AbstractService {
 
   /**
    * System actor.
@@ -43,16 +58,29 @@ class PeachServer(serverCache: ExternalServerCache = new MockupExternalServerCac
   /**
    * Init method.
    */
-  def init(): Unit = {
-    val comm = system.actorOf(AkkaPeachServerReceptor.props(serverCache), "comm")
-    ClusterReceptionistExtension(system).registerService(comm)
-    Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
+  def doInit(): Unit = {
+    Log.info("Initializing the service...")
+    this.serverCache.init()
+    Log.info("Service has been initialized.")
   }
 
   /**
-   * Stop method.
+   * Shutdown method implementation.
    */
-  def stop(): Unit = {
+  override def shutdown(): Unit = {
+    Log.info("Stopping service...")
+    this.serverCache.stop()
     system.shutdown()
+    Log.info("Service has been stopped.")
+  }
+
+  /**
+   * Method that is called when the run method is called on the service.
+   */
+  override protected def doRun(): Unit = {
+    Log.info("Running service..")
+    val comm = system.actorOf(AkkaPeachServerReceptor.props(serverCache), "comm")
+    ClusterReceptionistExtension(system).registerService(comm)
+    Thread.sleep(Duration(1, TimeUnit.SECONDS).toMillis)
   }
 }
