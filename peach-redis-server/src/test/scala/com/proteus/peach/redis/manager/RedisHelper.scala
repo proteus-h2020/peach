@@ -89,7 +89,7 @@ class RedisHelper(host: String = RedisHelper.DefaultHost, port: Int = RedisHelpe
     val poolConfig = new JedisPoolConfig()
     this.connectionPool = Some(new JedisPool(poolConfig, this.host, this.port))
     Try {
-      this.client = Option(this.connectionPool.get.getResource)
+      this.client = this.connectionPool.map(_.getResource)
     } match {
       case Success(_) => {
         this.isAlive()

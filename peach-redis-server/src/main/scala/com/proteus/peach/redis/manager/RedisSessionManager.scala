@@ -16,7 +16,7 @@
 
 package com.proteus.peach.redis.manager
 
-import java.util.{Map=>JMap}
+import java.util.{Map => JMap}
 import java.util.concurrent.ConcurrentHashMap
 import java.util.{List => JList}
 
@@ -27,6 +27,10 @@ import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.exceptions.JedisConnectionException
+
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
 
 /**
  * Redis session manager. For each session, a pool of available connections is maintained, each
@@ -97,17 +101,19 @@ object RedisSessionManager {
     poolConfig.setTestWhileIdle(true)
     val connectionPool = new JedisPool(
       poolConfig, redisSession.addresses.get(0), redisSession.port)
-    try {
-      val client = connectionPool.getResource
-      if (client.isConnected) {
-        client.close()
-        Some(connectionPool)
-      } else {
-        None
+    Try {
+      connectionPool.getResource
+    } match {
+      case Success(client) => {
+        if (client.isConnected) {
+          client.close()
+          Some(connectionPool)
+        } else {
+          None
+        }
       }
-    } catch {
-      case e: JedisConnectionException => {
-        Log.error(s"Cannot connect to redis ${redisSession}", e)
+      case Failure(error: JedisConnectionException )=> {
+        Log.error(s"Cannot connect to redis ${redisSession}", error)
         None
       }
     }
