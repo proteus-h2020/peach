@@ -15,14 +15,14 @@ The People's Republic of China is the world's largest producer of peaches. –
 #### Master branch
  
 [![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=master)](https://travis-ci.org/proteus-h2020/peach)
- 
 [![codecov](https://codecov.io/gh/proteus-h2020/peach/branch/master/graph/badge.svg)](https://codecov.io/gh/proteus-h2020/peach)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f2b76f0a6494fcca9c6ce2d2c694da3)](https://www.codacy.com/app/aagea/peach_2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=proteus-h2020/peach&amp;utm_campaign=Badge_Grade)
 
 #### Develop branch
  
-[![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=develop)](https://travis-ci.org/proteus-h2020/peach)
- 
+[![Build Status](https://travis-ci.org/proteus-h2020/peach.svg?branch=develop)](https://travis-ci.org/proteus-h2020/peach) 
 [![codecov](https://codecov.io/gh/proteus-h2020/peach/branch/develop/graph/badge.svg)](https://codecov.io/gh/proteus-h2020/peach)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4f2b76f0a6494fcca9c6ce2d2c694da3)](https://www.codacy.com/app/aagea/peach_2?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=proteus-h2020/peach&amp;utm_campaign=Badge_Grade)
 
 ## What does this module do
 
